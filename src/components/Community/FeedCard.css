@@ -1,0 +1,107 @@
+/* FeedCard.css - Premium */
+
+.feed-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.feed-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  background: var(--bg-card);
+}
+
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.feed-source-tag {
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.feed-time {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.feed-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.feed-summary {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.feed-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.feed-topic-tag {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.feed-topic-tag span {
+  color: var(--text-primary);
+  font-weight: 600;
+  background: var(--bg-secondary);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.feed-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.icon-btn {
+  padding: 0.6rem;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.icon-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+  transform: scale(1.1);
+  border-color: var(--border-light);
+}

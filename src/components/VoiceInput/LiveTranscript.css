@@ -1,0 +1,53 @@
+.transcript-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.transcript-content {
+  width: 100%;
+  background: transparent;
+  position: relative;
+  display: flex;
+}
+
+.transcript-editor {
+  width: 100%;
+  min-height: 150px;
+  background: transparent;
+  border: none;
+  resize: none;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  text-align: center;
+  font-family: var(--font-family);
+  outline: none;
+}
+
+.transcript-editor::placeholder {
+  color: #cbd5e1;
+}
+
+.cursor-blink {
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}

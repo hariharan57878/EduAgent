@@ -1,0 +1,76 @@
+/* ChannelSidebar.css - Premium */
+
+.channel-sidebar {
+  width: 260px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(15px);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-light);
+  flex-shrink: 0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.channel-header {
+  margin-bottom: 2rem;
+  padding: 0 0.75rem;
+}
+
+.channel-header h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.channel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.channel-item:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.channel-item.active {
+  background: var(--bg-card);
+  color: var(--accent-primary);
+  font-weight: 600;
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.channel-icon {
+  opacity: 0.7;
+}
+
+.channel-item.active .channel-icon {
+  opacity: 1;
+  color: var(--accent-primary);
+}
+
+.channel-hash {
+  opacity: 0.5;
+  font-family: var(--font-body);
+}

@@ -1,0 +1,237 @@
+/* ResumeLearning.css - Premium */
+
+.resume-section {
+  width: 100%;
+  margin-bottom: 3.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.section-header h2 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.view-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  background: transparent;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-full);
+}
+
+.view-all-btn:hover {
+  background: var(--bg-secondary);
+  transform: translateX(4px);
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.learning-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.learning-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--accent-primary);
+  background: var(--bg-card);
+}
+
+.card-image-wrapper {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.learning-card:hover .card-image {
+  transform: scale(1.1);
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(3px);
+}
+
+.learning-card:hover .play-overlay {
+  opacity: 1;
+}
+
+.play-icon {
+  color: white;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+  transform: scale(0.8);
+  transition: transform 0.3s back-out(1.7);
+}
+
+.learning-card:hover .play-icon {
+  transform: scale(1.1);
+}
+
+.progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 2;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--success);
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+.card-content {
+  padding: 1.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+
+.card-type {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+  background: var(--bg-secondary);
+  display: table;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+}
+
+.card-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.card-content p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  flex: 1;
+  line-height: 1.6;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.add-new-card {
+  border: 2px dashed var(--border-light);
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 320px;
+  transition: all 0.3s ease;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.add-new-card:hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-card);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.add-new-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-secondary);
+  gap: 1.5rem;
+}
+
+/* Wrapper for the Plus icon */
+.plus-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: var(--bg-card);
+  border-radius: 50%;
+  box-shadow: var(--shadow-md);
+  color: var(--accent-primary);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid var(--border-light);
+}
+
+.add-new-card:hover .plus-icon-wrapper {
+  transform: rotate(90deg) scale(1.1);
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+  border-color: transparent;
+}
+
+.add-new-content p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}

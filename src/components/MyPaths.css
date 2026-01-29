@@ -1,0 +1,235 @@
+/* MyPaths.css - Premium Upgrade */
+
+.my-paths-container {
+  padding: 3rem 4rem;
+  width: 100%;
+  margin: 0;
+  grid-column: 2 / -1;
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+.paths-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 4rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.paths-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+}
+
+.paths-header p {
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+}
+
+.create-path-btn {
+  background: var(--accent-gradient);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.create-path-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+  filter: brightness(1.1);
+}
+
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2.5rem;
+}
+
+.path-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  height: 100%;
+}
+
+.path-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--accent-primary);
+  background: var(--bg-card);
+}
+
+.path-image {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.path-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.path-card:hover .path-image img {
+  transform: scale(1.1);
+}
+
+.path-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(3px);
+}
+
+.path-card:hover .path-overlay {
+  opacity: 1;
+}
+
+.resume-btn {
+  width: 64px;
+  height: 64px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(0.8);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.path-card:hover .resume-btn {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.resume-btn:hover {
+  transform: scale(1.1);
+}
+
+.play-icon-fill {
+  fill: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.path-content {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.path-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.module-count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  background: var(--bg-secondary);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--border-light);
+}
+
+.more-options {
+  color: var(--text-secondary);
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.more-options:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.path-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.path-content p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  flex: 1;
+}
+
+.path-progress-section {
+  margin-bottom: 1.5rem;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.path-progress-bar {
+  height: 8px;
+  background: var(--bg-secondary);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.path-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--success), #34d399);
+  border-radius: 4px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.path-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-light);
+  padding-top: 1.5rem;
+  font-weight: 500;
+}

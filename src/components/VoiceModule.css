@@ -1,0 +1,306 @@
+/* VoiceModule.css */
+
+.voice-module-container {
+  padding: 2rem;
+  background: var(--bg-card);
+  /* Variable */
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  /* If this is inside a card already, remove shadow. Assuming it's a child of CreateModule container */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.voice-module-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.voice-main-card {
+  background: var(--bg-primary);
+  /* Variable */
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  /* Variable */
+}
+
+.upload-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.upload-content {
+  background: var(--bg-card);
+  /* Variable */
+  border: 2px dashed var(--border-color);
+  /* Variable */
+  border-radius: var(--radius-md);
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.upload-content:hover {
+  border-color: var(--accent-color);
+  background: var(--accent-soft);
+  color: var(--accent-color);
+}
+
+.upload-icon {
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+.player-panel {
+  background: var(--bg-card);
+  /* Variable */
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.player-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 40px;
+}
+
+.player-status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--success-color);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--success-color);
+}
+
+.waveform-visual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 100%;
+}
+
+.wave-line {
+  width: 3px;
+  background: var(--accent-color);
+  border-radius: 2px;
+  animation: wave 1s infinite ease-in-out;
+}
+
+@keyframes wave {
+
+  0%,
+  100% {
+    height: 10px;
+    opacity: 0.5;
+  }
+
+  50% {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+.player-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.control-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.control-btn:hover {
+  background: var(--bg-primary);
+  /* Variable */
+  color: var(--text-primary);
+}
+
+.control-btn.play {
+  width: 48px;
+  height: 48px;
+  background: var(--accent-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+}
+
+.control-btn.play:hover {
+  transform: scale(1.05);
+  background: #4f46e5;
+}
+
+.upload-action-btn {
+  width: 100%;
+  background: var(--text-primary);
+  /* Invert logic usually: dark button on light, light on dark? Or just primary variable */
+  /* Let's use a solid dark color for light mode, and white/accent for dark? 
+       Actually, standard is usually accent or careful contrast. 
+       Let's stick to the previous hardcoded #1e293b (slate-800) but map it to a variable or keep it dark if it's meant to be a dark button always. 
+       But in dark mode, slate-800 on slate-900 (bg-card) is invisible. 
+       Better to use var(--accent-color) or a specific button class. */
+  background: var(--accent-color);
+  color: white;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  margin-top: 0.5rem;
+  transition: all 0.2s;
+}
+
+.upload-action-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.divider-line {
+  width: 1px;
+  background: var(--border-color);
+  /* Variable */
+  height: 200px;
+}
+
+.audio-settings {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.setting-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.setting-control label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.setting-control input[type="range"] {
+  width: 100%;
+  height: 6px;
+  background: var(--border-color);
+  /* Variable */
+  border-radius: 3px;
+  -webkit-appearance: none;
+}
+
+.setting-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s;
+}
+
+.setting-control input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.liked-voices-section {
+  margin-top: 3rem;
+}
+
+.liked-voices-section h3 {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.voices-list {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+.voice-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.voice-item:hover {
+  transform: translateY(-5px);
+}
+
+.voice-avatar {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--bg-primary), var(--border-color));
+  /* Variable */
+  border-radius: 50%;
+  border: 3px solid var(--bg-card);
+  /* Variable */
+  box-shadow: var(--shadow-md);
+}
+
+.voice-track-line {
+  width: 100%;
+  height: 4px;
+  background: var(--border-color);
+  /* Variable */
+  border-radius: 2px;
+  position: relative;
+  width: 40px;
+}
+
+.voice-track-knob {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-color);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+}
+
+.voice-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}

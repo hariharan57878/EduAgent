@@ -1,0 +1,18 @@
+.intent-hint-container {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.hint-text {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.hint-spacer {
+  height: 40px;
+}

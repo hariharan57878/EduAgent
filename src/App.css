@@ -1,0 +1,34 @@
+/* App specific styles if needed, mostly handled in index.css and components */
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem 1rem 2rem 2rem;
+  /* Left padding larger, right padding smaller */
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.main-content {
+  padding: 2rem;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.main-header {
+  margin-bottom: 2rem;
+}
+
+.right-panel {
+  /* Sticky right panel if needed */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 2rem 2rem 2rem 1rem;
+  overflow-y: auto;
+  border-left: 1px solid var(--border-color);
+  /* Separator */
+  background: var(--bg-card);
+  /* Make right panel a distinct section/sidebar too? Or Keep transparent */
+}
