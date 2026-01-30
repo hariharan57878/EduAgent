@@ -13,17 +13,10 @@ const CreateModule = () => {
   const navigate = useNavigate();
   const { addPath } = useApp();
 
+  // Logic moved to GenerateModule component
   const handleGenerate = () => {
-    // Simulating AI Generation Process
-    const newPath = {
-      title: 'Quantum Computing Basics',
-      description: 'Generated roadmap based on your voice command and uploaded papers.',
-      modules: 8,
-      image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=300&auto=format&fit=crop'
-    };
-
-    addPath(newPath);
-    navigate('/');
+    // No-op or log
+    console.log("Generate Module handles its own submission");
   };
 
   const creationOptions = [

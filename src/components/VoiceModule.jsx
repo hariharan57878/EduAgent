@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mic, Upload, Play, Square, Cpu, CheckCircle, Volume2 } from 'lucide-react';
+import { Mic, Upload, Play, Square, Cpu, CheckCircle, Volume2, Sparkles } from 'lucide-react';
 import './CreateModule.css'; // Re-use styles
 
 const VoiceModule = () => {
@@ -40,6 +40,14 @@ const VoiceModule = () => {
         setStep('complete');
       }
     }, 150); // Simulate 3s training time
+  };
+
+
+
+  const handleGenerateFromVoice = () => {
+    // This is a placeholder for future AI generation from voice
+    // Ideally this would transcribe the audio and then call the generate-roadmap endpoint
+    alert("Voice-to-Roadmap generation coming soon! Please use the 'Generate Module' option for now.");
   };
 
   return (
@@ -145,9 +153,14 @@ const VoiceModule = () => {
 
         {/* Action Button */}
         {step === 'ready_to_train' && (
-          <button className="confirm-btn" onClick={startTraining}>
-            <Cpu size={20} /> Train Model
-          </button>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button className="confirm-btn" onClick={startTraining}>
+              <Cpu size={20} /> Train Model
+            </button>
+            <button className="confirm-btn" style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }} onClick={handleGenerateFromVoice}>
+              <Sparkles size={20} /> Generate Roadmap
+            </button>
+          </div>
         )}
       </div>
     </div>

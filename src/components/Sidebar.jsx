@@ -26,7 +26,7 @@ const Sidebar = () => {
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Home', path: '/' },
-    { icon: Waypoints, label: 'My Paths', path: '/create-module' },
+    { icon: Waypoints, label: 'My Paths', path: '/my-paths' },
     { icon: Mic, label: 'Voice Space', path: '/voice-space' },
     { icon: Users, label: 'Community', path: '/community' },
   ];

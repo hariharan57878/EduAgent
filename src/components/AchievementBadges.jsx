@@ -11,8 +11,9 @@ const badges = [
 
 const BadgesPanel = ({ userBadges = [] }) => {
   // If no badges, show placeholders or nothing
-  const displayBadges = badges; // For now, showing all. 
-  // Real Logic: const displayBadges = badges.filter(b => userBadges.includes(b.name));
+  const displayBadges = userBadges.length > 0
+    ? badges.filter(b => userBadges.includes(b.name))
+    : badges; // Default show all for demo if empty, or empty: []
 
   return (
     <div className="badges-container">
