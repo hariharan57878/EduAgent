@@ -7,7 +7,28 @@ import { useApp } from '../context/AppContext';
 
 const MyPaths = () => {
   const navigate = useNavigate();
-  const { paths } = useApp();
+  const { paths, deletePath } = useApp();
+  const [activeMenu, setActiveMenu] = React.useState(null);
+
+  const toggleMenu = (e, id) => {
+    e.stopPropagation();
+    setActiveMenu(activeMenu === id ? null : id);
+  };
+
+  const handleDelete = (e, id) => {
+    e.stopPropagation();
+    if (window.confirm("Are you sure you want to delete this roadmap?")) {
+      deletePath(id);
+      setActiveMenu(null);
+    }
+  };
+
+  // Close menu when clicking outside
+  React.useEffect(() => {
+    const closeMenu = () => setActiveMenu(null);
+    window.addEventListener('click', closeMenu);
+    return () => window.removeEventListener('click', closeMenu);
+  }, []);
 
   return (
     <div className="my-paths-container">
@@ -46,7 +67,23 @@ const MyPaths = () => {
             <div className="path-content">
               <div className="path-top">
                 <span className="module-count">{path.completed}/{path.modules} Modules</span>
-                <button className="more-options"><MoreVertical size={16} /></button>
+                <div className="menu-container" style={{ position: 'relative' }}>
+                  <button
+                    className="more-options"
+                    onClick={(e) => toggleMenu(e, path.id)}
+                  >
+                    <MoreVertical size={16} />
+                  </button>
+                  {activeMenu === path.id && (
+                    <div className="dropdown-menu">
+                      <button className="menu-item delete" onClick={(e) => handleDelete(e, path.id)}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span>Delete</span>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <h3>{path.title}</h3>

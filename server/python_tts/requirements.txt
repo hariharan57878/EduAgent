@@ -1,0 +1,8 @@
+flask
+qwen-tts
+soundfile
+numpy
+scipy
+torch
+transformers
+accelerate

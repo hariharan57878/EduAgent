@@ -51,5 +51,24 @@ router.post('/', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+// Delete a roadmap
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const roadmap = await Roadmap.findById(req.params.id);
+    if (!roadmap) return res.status(404).json({ msg: 'Roadmap not found' });
+
+    // Check user
+    if (roadmap.userId.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+
+    await Roadmap.findByIdAndDelete(req.params.id);
+    res.json({ msg: 'Roadmap removed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') return res.status(404).json({ msg: 'Roadmap not found' });
+    res.status(500).send('Server Error');
+  }
+});
 
 export default router;

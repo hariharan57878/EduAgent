@@ -46,6 +46,7 @@ export const AppProvider = ({ children }) => {
             modules: totalModules,
             completed: completedModules,
             lastAccessed: new Date(r.updatedAt).toLocaleDateString(),
+            phases: r.phases, // Include phases for ModuleDetail
             image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=300&auto=format&fit=crop' // Placeholder or stored
           };
         });
@@ -72,21 +73,33 @@ export const AppProvider = ({ children }) => {
   };
 
   const addPath = (newPath) => {
+    // Should use server ID if available to ensure persistence/deletion works
+    const finalId = newPath._id || Date.now();
+
     setPaths(prev => [
       {
-        id: Date.now(),
         progress: 0,
         completed: 0,
         lastAccessed: 'Just now',
         image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=300&auto=format&fit=crop', // Default image
-        ...newPath
+        ...newPath,
+        id: finalId, // Ensure ID override
       },
       ...prev
     ]);
   };
 
+  const deletePath = async (id) => {
+    try {
+      await client.delete(`/roadmaps/${id}`);
+      setPaths(prev => prev.filter(path => path.id !== id));
+    } catch (err) {
+      console.error("Failed to delete path", err);
+    }
+  };
+
   return (
-    <AppContext.Provider value={{ user, updateUser, paths, addPath }}>
+    <AppContext.Provider value={{ user, updateUser, paths, addPath, deletePath }}>
       {children}
     </AppContext.Provider>
   );

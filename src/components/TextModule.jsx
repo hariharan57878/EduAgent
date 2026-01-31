@@ -52,30 +52,47 @@ const TextModule = () => {
     let updatedPreferences = { ...preferences };
     let prompt = "";
 
-    if (step === 0) {
-      updatedPreferences.topic = userMsg.text;
-      setPreferences(updatedPreferences);
-      setTopic(userMsg.text);
-      prompt = `That's an excellent choice! To help me tailor the "**${userMsg.text}**" roadmap for you, could you tell me your current experience level? (e.g., Absolute Beginner, Intermediate, or looking to specialize?)`;
+    // Dynamic AI Interaction
+    try {
+      // Step 0: User provides Topic -> AI asks for Level
+      if (step === 0) {
+        updatedPreferences.topic = userMsg.text;
+        setPreferences(updatedPreferences);
+        setTopic(userMsg.text);
 
-      simulateResponse(prompt, 1);
+        // Ask AI to generate the next question
+        const response = await client.post('/agent/chat', {
+          message: `User selected topic: ${userMsg.text}. Ask them about their experience level (Beginner/Intermediate/Advanced) in a friendly way.`,
+          context: { role: "Architect", task: "Intake" }
+        });
 
-    } else if (step === 1) {
-      updatedPreferences.level = userMsg.text;
-      setPreferences(updatedPreferences);
-      prompt = "Got it. Do you have any specific focus areas or goals for this journey? (e.g., 'Focus on practical projects', 'Prepare for an interview', or 'Just casual learning')";
+        setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: response.data.reply }]);
+        setStep(1);
+      }
 
-      simulateResponse(prompt, 2);
+      // Step 1: User provides Level -> AI asks for Goal
+      else if (step === 1) {
+        updatedPreferences.level = userMsg.text;
+        setPreferences(updatedPreferences);
 
-    } else if (step === 2) {
-      updatedPreferences.goal = userMsg.text;
-      setPreferences(updatedPreferences);
+        const response = await client.post('/agent/chat', {
+          message: `User is ${userMsg.text} in ${updatedPreferences.topic}. Ask them about their specific goal or project idea.`,
+          context: { role: "Architect", task: "Intake", topic: updatedPreferences.topic }
+        });
 
-      // Trigger AI Generation
-      try {
-        // Notify user we are working
-        setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: "Perfect. I'm analyzing your requirements and structuring the optimal learning path now... This might take a moment." }]);
+        setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: response.data.reply }]);
+        setStep(2);
+      }
 
+      // Step 2: User provides Goal -> AI confirms and Generates Roadmap
+      else if (step === 2) {
+        updatedPreferences.goal = userMsg.text;
+        setPreferences(updatedPreferences);
+
+        // Notify user
+        setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: "Understood. I'm designing your custom curriculum now..." }]);
+
+        // Call Generate Roadmap
         const response = await client.post('/agent/generate-roadmap', {
           role: updatedPreferences.topic,
           interests: [updatedPreferences.level, updatedPreferences.goal]
@@ -83,43 +100,37 @@ const TextModule = () => {
 
         const roadmapData = response.data;
 
-        // Save to DB immediately or let user save?
-        // For now, we display it. The backend 'save' happens if we want to persist it.
-        // Actually, let's auto-save it to user's profile API if needed, 
-        // but our current API endpoint /generate-roadmap just returns JSON.
-        // Let's call /roadmaps POST to save it IF the user accepts.
-
         const roadmapMsg = {
           id: Date.now() + 10,
           sender: 'ai',
-          text: "Here is the custom roadmap I've architected for you. Does this look good to start?",
+          text: `Here is the ${roadmapData.title}. Ready to begin?`,
           hasRoadmap: true,
-          roadmapData: roadmapData // Backend returns full roadmap structure
+          roadmapData: roadmapData
         };
 
         setMessages(prev => [...prev, roadmapMsg]);
-        setIsTyping(false);
         setStep(3);
-
-      } catch (err) {
-        console.error(err);
-        setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: "I encountered an error generating your roadmap. Please try again." }]);
-        setIsTyping(false);
       }
-    } else {
-      // Chat mode (future enhancement: connect to /agent/chat)
-      setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: "You can start learning now! I've saved your preferences." }]);
+      // General Chat after roadmap
+      else {
+        const response = await client.post('/agent/chat', {
+          message: userMsg.text,
+          context: { role: "Architect", currentRoadmap: topic }
+        });
+        setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: response.data.reply }]);
+      }
+
+      setIsTyping(false);
+
+    } catch (err) {
+      console.error("AI Error:", err);
+      setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text: "I'm having trouble connecting to my brain. Please try again." }]);
       setIsTyping(false);
     }
   };
 
-  const simulateResponse = (text, nextStep) => {
-    setTimeout(() => {
-      setMessages(prev => [...prev, { id: Date.now(), sender: 'ai', text }]);
-      setStep(nextStep);
-      setIsTyping(false);
-    }, 1000);
-  }
+  // Removed static simulateResponse function
+
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') handleSend();

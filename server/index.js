@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config({ override: true }); // Force load .env over existing env vars
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
 import authRoutes from './routes/auth.js';
@@ -8,9 +10,8 @@ import aiRoutes from './routes/ai.js';
 import roadmapRoutes from './routes/roadmaps.js';
 import postsRoutes from './routes/posts.js';
 
-dotenv.config();
-
 const app = express();
+
 const PORT = process.env.PORT || 5000;
 
 // Middleware

@@ -12,15 +12,17 @@ const ModuleDetail = () => {
   const [module, setModule] = useState(null);
 
   useEffect(() => {
-    // Find module by ID
-    const foundModule = paths.find(p => p.id.toString() === id);
-    if (foundModule) {
-      setModule(foundModule);
-    } else {
-      // Fallback or loading if not found immediately (could redirect)
-      navigate('/my-paths');
+    // Wait for paths to populate before redirecting
+    if (paths.length > 0) {
+      const foundModule = paths.find(p => p.id.toString() === id);
+      if (foundModule) {
+        setModule(foundModule);
+      } else {
+        console.warn("Module not found in paths:", id);
+        // navigate('/my-paths'); // Optional: redirect only if sure
+      }
     }
-  }, [id, paths, navigate]);
+  }, [id, paths]);
 
   if (!module) return <div>Loading...</div>;
 
@@ -88,8 +90,38 @@ const ModuleDetail = () => {
                   {index < 1 && <CheckCircle size={12} color="white" />}
                 </div>
                 <div className="timeline-content">
-                  <h3>Phase {index + 1}</h3>
-                  <p>{typeof phase === 'object' ? phase.title : phase}</p>
+                  <h3>Phase {index + 1}: {phase.title}</h3>
+                  <p>{phase.description}</p>
+
+                  {phase.modules && phase.modules.length > 0 && (
+                    <div className="phase-modules">
+                      {phase.modules.map((mod, mIdx) => (
+                        <div key={mIdx} className="module-item">
+                          <div className="module-info">
+                            <h4>{mod.title}</h4>
+                            <span className="module-type">{mod.type}</span>
+                          </div>
+                          <button
+                            className="start-ai-btn"
+                            onClick={() => navigate('/voice-space', {
+                              state: {
+                                context: {
+                                  topic: mod.title,
+                                  content: mod.textContent,
+                                  phase: phase.title,
+                                  // Pass navigation data
+                                  modulesList: phase.modules,
+                                  currentIndex: mIdx
+                                }
+                              }
+                            })}
+                          >
+                            <PlayCircle size={16} /> Start with AI
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
