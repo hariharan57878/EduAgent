@@ -58,4 +58,9 @@ export const communityService = {
   createPost: (postData) => api.post('/posts', postData),
 };
 
+// Onboarding Services
+export const onboardingService = {
+  complete: (data) => api.post('/onboarding/complete', data),
+};
+
 export default api;

@@ -10,6 +10,7 @@ import authRoutes from './routes/auth.js';
 import aiRoutes from './routes/ai.js';
 import roadmapRoutes from './routes/roadmaps.js';
 import postsRoutes from './routes/posts.js';
+import onboardingRoutes from './routes/onboarding.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/agent', aiRoutes);
 app.use('/api/roadmaps', roadmapRoutes);
 app.use('/api/posts', postsRoutes);
+app.use('/api/onboarding', onboardingRoutes);
 
 app.get('/', (req, res) => {
   res.send('EduAgent Enterprise API is running 🚀');

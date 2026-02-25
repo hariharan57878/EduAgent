@@ -1,0 +1,126 @@
+.topbar {
+  height: var(--topbar-height);
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  flex-shrink: 0;
+  z-index: 90;
+}
+
+.roadmap-context {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  min-width: 300px;
+}
+
+.current-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.icon-gold {
+  color: #fbbf24;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.progress-bar-bg {
+  width: 100px;
+  height: 6px;
+  background-color: var(--bg-secondary);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.motivation-layer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.tagline-subtle {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.stats-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  background-color: var(--bg-secondary);
+  border-radius: 2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stat-pill.xp {
+  color: var(--accent-primary);
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.xp-badge {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  background: var(--accent-gradient);
+  color: white;
+  border-radius: 4px;
+  margin-left: 0.25rem;
+}
+
+.stat-pill.streak {
+  color: #f97316;
+  background-color: rgba(249, 115, 22, 0.1);
+}
+
+.icon-orange {
+  color: #f97316;
+}
+
+.user-profile-summary img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light);
+  cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .motivation-layer {
+    display: none;
+  }
+}

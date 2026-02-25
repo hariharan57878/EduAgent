@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ArrowLeft, Sparkles, CheckCircle, Target, Clock, Brain } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
-import { authService, aiService, roadmapService } from '../services/api';
+import { authService, aiService, roadmapService, onboardingService } from '../services/api';
 import './Wizard.css';
 
 const Wizard = () => {
@@ -25,27 +25,26 @@ const Wizard = () => {
   const prevStep = () => setStep(s => s - 1);
 
   const handleFinish = async () => {
+    if (!formData.targetRole.trim()) return;
+
     setLoading(true);
     try {
-      // 1. Update User Profile
-      await authService.updateProfile({
-        ...formData,
-        onboardingCompleted: true
-      });
+      // Single Atomic Server Call: Update Profile + Generate Roadmap + Save Roadmap
+      const res = await onboardingService.complete(formData);
 
-      // 2. Generate Initial Roadmap based on wizard data
-      const roadmapResponse = await aiService.generateRoadmap(formData);
-      const roadmapData = roadmapResponse.data;
+      if (res.data.success) {
+        // Update local context
+        addPath(res.data.roadmap);
 
-      // 3. Save Roadmap
-      const savedRoadmap = await roadmapService.save(roadmapData);
-      addPath(savedRoadmap.data);
-
-      // 4. Force reload to refresh context and trigger RouteGuard redirect
-      window.location.reload();
+        // Refresh and redirect occurs automatically because on page load 
+        // App.jsx will get onboardingCompleted: true from /auth/me
+        window.location.reload();
+      }
     } catch (err) {
       console.error("Wizard Completion Failed", err);
-      alert("Something went wrong. Please try again.");
+      // Detailed error for user
+      const msg = err.response?.data?.message || "Generation timed out. Please try again.";
+      alert(msg);
     } finally {
       setLoading(false);
     }

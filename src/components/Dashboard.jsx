@@ -1,65 +1,192 @@
-import React from 'react';
-import StreakCalendar from './StreakCalendar';
-import SearchBar from './SearchBar';
-import RecentLearning from './ResumeLearning';
-import BadgesPanel from './AchievementBadges';
-import FriendsStreak from './FriendsPanel';
-import WeeklyChallenge from './WeeklyChallenge';
-import { BrainCircuit } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ChevronRight,
+  ChevronDown,
+  CheckCircle2,
+  Circle,
+  Clock,
+  Layout,
+  ListOrdered,
+  MoreHorizontal,
+  ExternalLink,
+  Plus
+} from 'lucide-react';
+import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
-import { useApp } from '../context/AppContext';
-
 const Dashboard = () => {
-  const { user, paths } = useApp();
+  const { paths, completeModule } = useApp();
+  const { user } = useAuth();
+  const [viewMode, setViewMode] = useState('timeline'); // 'timeline' or 'kanban'
+  const [expandedPhases, setExpandedPhases] = useState({});
 
-  // Safe stats check
-  const streak = user?.stats?.streak || 0;
-  const learningTime = user?.stats?.learningHours || 0;
+  const currentPath = paths[0];
 
-  return (
-    <div className="dashboard-container">
-      <header className="main-header">
-        <div className="app-logo">
-          <div className="logo-icon-bg">
-            <BrainCircuit size={28} color="white" />
+  const handleComplete = (pIdx, mIdx) => {
+    if (currentPath.id) {
+      completeModule(currentPath.id, pIdx, mIdx);
+    }
+  };
+
+  if (!currentPath) {
+    return (
+      <div className="empty-dashboard">
+        <div className="empty-content">
+          <div className="empty-icon-wrapper">
+            <Layout size={48} />
           </div>
-          <span className="app-name">EduAgent</span>
+          <h2>Ready to architect your success?</h2>
+          <p>You don't have an active roadmap yet. Let's build your execution plan.</p>
+          <button className="btn-primary" onClick={() => window.location.href = '/create-module'}>
+            <Plus size={18} /> Create Execution Plan
+          </button>
         </div>
-        <SearchBar />
-      </header>
+      </div>
+    );
+  }
 
-      <div className="dashboard-content-grid">
-        <div className="left-column">
-          <StreakCalendar currentStreak={streak} />
-          <WeeklyChallenge />
-        </div>
+  const togglePhase = (phaseId) => {
+    setExpandedPhases(prev => ({
+      ...prev,
+      [phaseId]: !prev[phaseId]
+    }));
+  };
 
-        <div className="middle-column">
-          <div className="dashboard-hero glass-card">
-            <div className="hero-content">
-              <h1>Welcome back, <span className="text-gradient">{user?.username || 'Learner'}</span>!</h1>
-              <p>You're on a <strong>{streak}-day streak</strong>. Keep up the momentum in <strong>{paths[0]?.title || 'your learning'}</strong>.</p>
+  const renderTimeline = () => (
+    <div className="timeline-view">
+      {currentPath.phases.map((phase, pIdx) => {
+        const isOpen = expandedPhases[pIdx] || pIdx === 0;
+        const phaseProgress = 45; // Placeholder
 
-              <div className="hero-stats">
-                <div className="stat-item">
-                  <span className="stat-value">85%</span>
-                  <span className="stat-label">Weekly Goal</span>
+        return (
+          <div key={pIdx} className={`phase-card ${isOpen ? 'open' : ''}`}>
+            <div className="phase-header" onClick={() => togglePhase(pIdx)}>
+              <div className="phase-main">
+                {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+                <div className="phase-info">
+                  <h3>{phase.title}</h3>
+                  <p>{phase.description}</p>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-value">{learningTime} hrs</span>
-                  <span className="stat-label">Learning Time</span>
+              </div>
+
+              <div className="phase-meta">
+                <div className="phase-progress-mini">
+                  <div className="mini-bar-bg">
+                    <div className="mini-bar-fill" style={{ width: `${phaseProgress}%` }} />
+                  </div>
+                  <span>{phaseProgress}%</span>
                 </div>
               </div>
             </div>
+
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  className="phase-content"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                >
+                  <div className="module-list">
+                    {phase.modules.map((module, mIdx) => (
+                      <div key={mIdx} className="module-item">
+                        <div
+                          className="module-status"
+                          onClick={() => handleComplete(pIdx, mIdx)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          {module.status === 'completed' ? (
+                            <CheckCircle2 size={20} className="status-done" />
+                          ) : (
+                            <Circle size={20} className="status-todo" />
+                          )}
+                        </div>
+
+                        <div className="module-details">
+                          <div className="module-header-row">
+                            <h4>{module.title}</h4>
+                            <div className="module-actions">
+                              <span className="effort-badge"><Clock size={12} /> {module.estimatedTime || '30m'}</span>
+                              <button className="action-btn"><ExternalLink size={14} /></button>
+                              <button className="action-btn"><MoreHorizontal size={14} /></button>
+                            </div>
+                          </div>
+                          <p className="module-objective">{module.textContent || 'Master the core principles and execute the basic requirements.'}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-          <RecentLearning />
+        );
+      })}
+    </div>
+  );
+
+  const renderKanban = () => (
+    <div className="kanban-view">
+      <div className="kanban-column">
+        <div className="column-header">To Learn <span className="count">12</span></div>
+        <div className="kanban-cards">
+          {/* Example Kanban Card */}
+          <div className="kanban-card">
+            <h4>Advanced React Patterns</h4>
+            <div className="card-footer">
+              <span className="effort-badge">45m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="kanban-column highlight">
+        <div className="column-header">In Progress <span className="count">2</span></div>
+        <div className="kanban-cards">
+          <div className="kanban-card">
+            <h4>Node.js Event Loop</h4>
+            <div className="card-footer">
+              <span className="effort-badge">60m</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="kanban-column">
+        <div className="column-header">Completed <span className="count">45</span></div>
+        <div className="kanban-cards">
+          {/* Completed Cards */}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="dashboard-v2">
+      <header className="content-header">
+        <div className="header-text">
+          <h1>Learning Command Center</h1>
+          <p>Execute your roadmap to mastery.</p>
         </div>
 
-        <div className="right-column">
-          <FriendsStreak />
-          <BadgesPanel userBadges={user?.stats?.badges || []} />
+        <div className="view-toggle">
+          <button
+            className={`toggle-btn ${viewMode === 'timeline' ? 'active' : ''}`}
+            onClick={() => setViewMode('timeline')}
+          >
+            <ListOrdered size={16} /> Timeline
+          </button>
+          <button
+            className={`toggle-btn ${viewMode === 'kanban' ? 'active' : ''}`}
+            onClick={() => setViewMode('kanban')}
+          >
+            <Layout size={16} /> Kanban
+          </button>
         </div>
+      </header>
+
+      <div className="command-workspace">
+        {viewMode === 'timeline' ? renderTimeline() : renderKanban()}
       </div>
     </div>
   );
