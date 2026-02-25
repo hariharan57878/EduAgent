@@ -1,15 +1,18 @@
 import Roadmap from '../models/Roadmap.js';
+import { cacheService } from './cacheService.js';
+import logger from '../utils/logger.js';
 
 export const getUserRoadmaps = async (userId) => {
-  // TODO: Add Redis Cache Check
-  // const cached = await redis.get(`roadmaps:${userId}`);
-  // if (cached) return JSON.parse(cached);
+  const cacheKey = `roadmaps:${userId}`;
+  const cached = await cacheService.get(cacheKey);
+  if (cached) {
+    logger.info(`Returning cached roadmaps for user: ${userId}`);
+    return cached;
+  }
 
   const roadmaps = await Roadmap.find({ userId }).sort({ createdAt: -1 });
 
-  // TODO: Set Redis Cache
-  // await redis.set(`roadmaps:${userId}`, JSON.stringify(roadmaps), 'EX', 3600);
-
+  await cacheService.set(cacheKey, roadmaps, 300); // Cache for 5 mins
   return roadmaps;
 };
 
@@ -26,9 +29,17 @@ export const createRoadmap = async (userId, roadmapData) => {
     description,
     phases
   });
-  return await newRoadmap.save();
+
+  const saved = await newRoadmap.save();
+  await cacheService.delete(`roadmaps:${userId}`); // Invalidate cache
+  return saved;
 };
 
 export const deleteRoadmap = async (id) => {
-  return await Roadmap.findByIdAndDelete(id);
+  const roadmap = await Roadmap.findById(id);
+  const result = await Roadmap.findByIdAndDelete(id);
+  if (roadmap) {
+    await cacheService.delete(`roadmaps:${roadmap.userId}`); // Invalidate cache
+  }
+  return result;
 };

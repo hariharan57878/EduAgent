@@ -1,45 +1,31 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import Groq from 'groq-sdk';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const getGeminiResponse = async (prompt) => {
-  if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY not found in env");
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  return response.text();
-};
+import { getGeminiCompletion } from './ai/geminiProvider.js';
+import { getGroqCompletion } from './ai/groqProvider.js';
+import { aiConfig } from '../config/aiConfig.js';
+import logger from '../utils/logger.js';
 
 export const getAIResponse = async (prompt) => {
   // Try Groq First
-  if (process.env.GROQ_API_KEY) {
+  if (aiConfig.groq.apiKey) {
     try {
-      const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-      const completion = await groq.chat.completions.create({
-        messages: [{ role: "user", content: prompt }],
-        model: "llama-3.3-70b-versatile",
-        temperature: 0.7,
-      });
-      return completion.choices[0]?.message?.content || "";
+      logger.info('Using Groq Provider');
+      return await getGroqCompletion(prompt);
     } catch (err) {
-      console.warn("Groq Error, falling back to Gemini:", err.message);
+      logger.warn('Groq failed, falling back to Gemini');
     }
   }
 
   // Fallback to Gemini
-  if (process.env.GEMINI_API_KEY) {
+  if (aiConfig.gemini.apiKey) {
     try {
-      return await getGeminiResponse(prompt);
+      logger.info('Using Gemini Provider');
+      return await getGeminiCompletion(prompt);
     } catch (err) {
-      console.warn("Gemini Error:", err.message);
+      logger.error('Gemini Provider critical failure');
       throw err;
     }
   }
 
-  throw new Error("No valid AI API Key found");
+  throw new Error("No AI providers configured or available");
 };
 
 export const generateRoadmap = async (role, interests) => {
@@ -54,21 +40,21 @@ export const generateRoadmap = async (role, interests) => {
       "description": "Brief description",
       "phases": [
         {
-          "title": "Phase Name (e.g., Foundations)",
-          "description": "Goal of this phase",
+          "title": "Phase Name",
+          "description": "Goal",
           "modules": [
             {
               "title": "Module Title",
               "type": "video/article/quiz",
-              "contentUrl": "Search query for this topic", 
-              "textContent": "Short summary of what to learn",
-              "estimatedTime": "Time duration"
+              "contentUrl": "Search query", 
+              "textContent": "Summary",
+              "estimatedTime": "15 mins"
             }
           ]
         }
       ]
     }
-    Do not include markdown backticks like \`\`\`json. Just the raw JSON string.
+    No markdown backticks.
   `;
 
   const rawText = await getAIResponse(prompt);

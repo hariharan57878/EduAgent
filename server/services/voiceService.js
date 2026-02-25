@@ -1,19 +1,19 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { aiConfig } from '../config/aiConfig.js';
+import logger from '../utils/logger.js';
 
 export const generateVoice = async (text, voiceId) => {
-  const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+  const apiKey = aiConfig.voice.elevenLabsApiKey;
 
-  if (ELEVENLABS_API_KEY) {
-    const ELEVENLABS_VOICE_ID = voiceId || "21m00Tcm4TlvDq8ikWAM";
+  if (apiKey) {
+    logger.info('Using ElevenLabs for voice generation');
+    const actualVoiceId = voiceId || aiConfig.voice.defaultVoiceId;
     const response = await axios({
       method: 'post',
-      url: `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`,
+      url: `https://api.elevenlabs.io/v1/text-to-speech/${actualVoiceId}`,
       headers: {
         'Accept': 'audio/mpeg',
-        'xi-api-key': ELEVENLABS_API_KEY,
+        'xi-api-key': apiKey,
         'Content-Type': 'application/json',
       },
       data: {
@@ -25,7 +25,7 @@ export const generateVoice = async (text, voiceId) => {
     });
     return { data: response.data, contentType: 'audio/mpeg' };
   } else {
-    // Fallback to Local Qwen TTS
+    logger.info('Using Local TTS fallback');
     const response = await axios({
       method: 'post',
       url: 'http://localhost:8000/tts',

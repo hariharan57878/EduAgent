@@ -1,38 +1,36 @@
 import * as aiService from '../services/aiService.js';
 import * as voiceService from '../services/voiceService.js';
+import { validateRoadmapInput } from '../dto/roadmap.dto.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
-export const generateRoadmap = async (req, res) => {
-  try {
-    const { role, interests } = req.body;
-    const roadmapData = await aiService.generateRoadmap(role, interests);
-    res.json(roadmapData);
-  } catch (err) {
-    console.error("AI Generation Error:", err);
-    res.status(500).json({ message: 'AI Generation Failed', error: err.message });
+export const generateRoadmap = asyncHandler(async (req, res) => {
+  const validatedData = validateRoadmapInput(req.body);
+  const roadmapData = await aiService.generateRoadmap(validatedData.role, validatedData.interests);
+  res.json(roadmapData);
+});
+
+export const chat = asyncHandler(async (req, res) => {
+  const { message, context } = req.body;
+
+  if (!message) {
+    const error = new Error('Message is required');
+    error.status = 400;
+    throw error;
   }
-};
 
-export const chat = async (req, res) => {
-  try {
-    const { message, context } = req.body;
-    const reply = await aiService.getChatReply(message, context);
-    res.json({ reply });
-  } catch (err) {
-    console.error("[Chat] Error:", err.message);
-    res.status(500).json({ message: 'AI Chat Failed', error: err.message });
+  const reply = await aiService.getChatReply(message, context);
+  res.json({ reply });
+});
+
+export const generateVoice = asyncHandler(async (req, res) => {
+  const { text, voiceId } = req.body;
+  if (!text) {
+    const error = new Error('Text is required');
+    error.status = 400;
+    throw error;
   }
-};
 
-export const generateVoice = async (req, res) => {
-  try {
-    const { text, voiceId } = req.body;
-    if (!text) return res.status(400).json({ message: "Text is required" });
-
-    const { data, contentType } = await voiceService.generateVoice(text, voiceId);
-    res.set('Content-Type', contentType);
-    res.send(data);
-  } catch (err) {
-    console.error("Voice Generation Error:", err.message);
-    res.status(500).json({ message: 'Voice Generation Failed', error: err.message });
-  }
-};
+  const { data, contentType } = await voiceService.generateVoice(text, voiceId);
+  res.set('Content-Type', contentType);
+  res.send(data);
+});
