@@ -30,25 +30,29 @@ export const getAIResponse = async (prompt) => {
 
 export const generateRoadmap = async (role, interests) => {
   const prompt = `
-    Act as an expert educational curriculum designer. Create a detailed learning roadmap for the role: "${role}".
+    Act as an expert Learning Operations Manager. Create a structured execution workspace for the role: "${role}".
     User interests: ${interests ? interests.join(', ') : 'General'}.
     
+    The roadmap must be an execution timeline focused on mastery and completion.
+    "Stop starting over. Start finishing."
+
     Return the response STRICTLY as a JSON object with this structure:
     {
       "title": "Roadmap Name",
       "role": "${role}",
-      "description": "Brief description",
+      "description": "Structured execution path for ${role}",
       "phases": [
         {
-          "title": "Phase Name",
-          "description": "Goal",
+          "title": "Phase Name (e.g., Tactical Foundations)",
+          "description": "Execution goal for this phase",
           "modules": [
             {
               "title": "Module Title",
-              "type": "video/article/quiz",
-              "contentUrl": "Search query", 
-              "textContent": "Summary",
-              "estimatedTime": "15 mins"
+              "type": "video/article/project",
+              "contentUrl": "Optimized search query for high-quality resources", 
+              "textContent": "Operational objective: What must be completed",
+              "estimatedTime": "45 mins",
+              "estimatedEffort": 45
             }
           ]
         }
@@ -63,6 +67,18 @@ export const generateRoadmap = async (role, interests) => {
 };
 
 export const getChatReply = async (message, context) => {
-  const prompt = `You are EduAgent, a helpful AI learning assistant. Context: ${JSON.stringify(context || {})}. User says: ${message}`;
+  const systemPrompt = `
+    You are the EduAgent Learning Steward. You are a Learning Operations Manager, not a tutor.
+    Your mission: "Stop starting over. Start finishing."
+    
+    Rules:
+    - You do NOT teach concepts. 
+    - You do NOT provide long-form academic explanations.
+    - You manage execution and momentum.
+    - Assist in decision-making, roadmap optimization, and providing guidance on next steps.
+    - If a user asks to learn something, point them to their workspace or suggest a high-quality resource.
+    - Focus on structure, tracking, and completion.
+  `;
+  const prompt = `${systemPrompt}\nContext: ${JSON.stringify(context || {})}.\nUser says: ${message}`;
   return await getAIResponse(prompt);
 };

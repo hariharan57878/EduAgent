@@ -1,35 +1,35 @@
 # EduAgent 🎓
+> **"Stop starting over. Start finishing."**
 
-**EduAgent** is an intelligent, AI-powered educational platform designed to revolutionize personalized learning. By leveraging advanced AI models like **Google Gemini**, EduAgent generates custom learning roadmaps, facilitates interactive voice-based learning sessions, and fosters a collaborative community for learners.
+**EduAgent** is an AI-powered structured learning workspace designed to help users build, manage, and complete personalized career roadmaps. Unlike traditional learning platforms or chat-based tutors, EduAgent acts as your **Learning Operations Manager**, providing the structure and momentum tracking necessary to achieve mastery.
 
-Whether you're looking to master a new skill, track your progress through gamified achievements, or engage in hands-free learning with our Voice Space, EduAgent is your personal AI tutor.
+Whether you're looking to bridge a professional skills gap or master a complex craft, EduAgent transforms overwhelming information into an executable, managed journey.
 
 ---
 
 ## 🚀 Key Features
 
-### 🧠 **AI-Powered Learning Roadmaps**
-- **Custom Paths**: Generate detailed, step-by-step learning paths based on your specific role, interests, and goals.
-- **Dynamic Content**: Utilizes **Google Gemini and Groq AI** to curate up-to-date and relevant study materials.
-- **Progress Tracking**: Visual progress bars and milestone tracking to keep you motivated.
+### 🛠️ **Structured Learning Workspace**
+- **Execution-Ready Roadmaps**: Generate multi-phase learning paths focused on tactical execution and mastery.
+- **Phase-Based Timeline**: Organize your journey into clear milestones with expandable checklist modules.
+- **Resource Management**: Curate and manage external videos, articles, and documentation directly within your workspace modules.
 
-### 🎙️ **Immersive Voice Space**
-- **Hands-Free Learning**: Interact with the AI tutor using natural voice commands.
-- **VoiceOrb Interface**: A visually engaging, reactive voice interface that mimics natural conversation flow.
-- **Real-time Feedback**: Instant responses and explanations for your queries.
+### 🤖 **Proactive AI Steward**
+- **Learning Operations Manager**: An AI that monitors your pace, detects inactivity, and suggests roadmap optimizations to keep you moving.
+- **High-Quality Curation**: AI focuses on finding the best external resources rather than teaching concepts through a chat box.
+- **Executive Guidance**: Get strategic advice on your next steps and decision-making helpers to bypass learning blocks.
 
-### 🏆 **Gamification & Dashboard**
-- **Achievement Badges**: Earn badges for completing modules, maintaining streaks, and mastering topics.
-- **Comprehensive Dashboard**: A centralized hub to view your active paths, weekly challenges, and learning statistics.
-- **Leaderboards**: Compete with friends and the community (coming soon).
+### 📊 **Momentum & Progress Tracking**
+- **Completion-Centric Metrics**: Track time spent, milestone completion, and overall roadmap velocity.
+- **Granular Module States**: Manage tasks through "Not Started," "In Progress," and "Completed" states.
+- **Consistency Gamification**: Maintain learning streaks and earn badges that celebrate your finishing power, not just your starting intent.
 
-### 👥 **Community & Collaboration**
-- **Community Hub**: Connect with other learners, share your generated roadmaps, and discuss complex topics.
-- **Resource Sharing**: Upload and share notes, links, and helpful resources.
+### 👥 **Strategic Community**
+- **Roadmap Forking**: Browse and adopt successful execution paths designed by the community.
+- **Managed Discussions**: Connect with other learners focused on the same execution goals.
 
-### 🔒 **Secure & Robust Patterns**
-- **User Authentication**: Secure signup and login functionality using JWT (JSON Web Tokens).
-- **Data Privacy**: Your learning data and preferences are securely stored.
+### 🔒 **Secure Execution Board**
+- **Professional Persistence**: Your progress and roadmap configurations are securely stored and synced across your sessions.
 
 ---
 
@@ -135,7 +135,7 @@ The project follows a professional **Clean Architecture** to ensure scalability,
 ### **Backend (Controller-Service-Model)**
 - **Routes**: Handle URL mapping and call the appropriate controller.
 - **Controllers**: Manage HTTP requests/responses, status codes, and input validation.
-- **Services**: Contain the core **business logic**, AI prompting, and database orchestration.
+- **Services**: Contain the core **business logic**, AI prompting, and database orchestration. 
 - **Models**: Define the MongoDB/Mongoose schemas.
 
 ### **Frontend (Service Abstraction)**

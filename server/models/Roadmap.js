@@ -11,13 +11,21 @@ const moduleSchema = new mongoose.Schema({
     enum: ['video', 'article', 'quiz', 'project', 'voice-interaction'],
     default: 'article'
   },
-  contentUrl: String, // Link to video or resource
-  textContent: String, // Markdown content
-  estimatedTime: String, // e.g., "15 mins"
-  completed: {
-    type: Boolean,
-    default: false
+  contentUrl: String,
+  textContent: String,
+  estimatedTime: String, // Display string (e.g., "15 mins")
+  estimatedEffort: Number, // Minutes for tracking
+  timeSpent: {
+    type: Number,
+    default: 0
   },
+  status: {
+    type: String,
+    enum: ['not-started', 'in-progress', 'completed'],
+    default: 'not-started'
+  },
+  completedAt: Date,
+  notes: String,
   quiz: [{
     question: String,
     options: [String],
@@ -54,6 +62,11 @@ const roadmapSchema = new mongoose.Schema({
     type: String,
     enum: ['active', 'completed', 'archived'],
     default: 'active'
+  },
+  viewPreference: {
+    type: String,
+    enum: ['timeline', 'kanban'],
+    default: 'timeline'
   },
   createdAt: {
     type: Date,
