@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import client from '../api/client';
+import { authService } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -13,10 +13,6 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       if (token) {
         try {
-          // Verify token and get user data (we assume the token itself has info or we could add a /me endpoint)
-          // For now, we'll decode the token or just trust it until an API call fails
-          // Ideally: const res = await client.get('/auth/user'); setUser(res.data);
-
           setIsAuthenticated(true);
         } catch (err) {
           console.error(err);
@@ -30,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await client.post('/auth/login', { email, password });
+      const res = await authService.login({ email, password });
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);
@@ -44,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (username, email, password, preferences) => {
     try {
-      const res = await client.post('/auth/signup', { username, email, password, preferences });
+      const res = await authService.signup({ username, email, password, preferences });
       localStorage.setItem('token', res.data.token);
       setToken(res.data.token);
       setUser(res.data.user);

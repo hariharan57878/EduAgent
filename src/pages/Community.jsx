@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ChannelSidebar from '../components/Community/ChannelSidebar';
 import FeedCard from '../components/Community/FeedCard';
 import ContextPanel from '../components/Community/ContextPanel';
-import client from '../api/client';
+import { communityService } from '../services/api';
 import { Send } from 'lucide-react';
 import './Community.css';
 
@@ -17,7 +17,7 @@ const Community = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const res = await client.get(`/posts?channel=${activeChannel}`);
+        const res = await communityService.getPosts(activeChannel);
         setPosts(res.data);
       } catch (err) {
         console.error("Failed to fetch posts", err);
@@ -34,7 +34,7 @@ const Community = () => {
     if (!newPostContent.trim()) return;
 
     try {
-      const res = await client.post('/posts', {
+      const res = await communityService.createPost({
         channel: activeChannel,
         content: newPostContent
       });

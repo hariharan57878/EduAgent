@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
-dotenv.config({ override: true }); // Force load .env over existing env vars
+dotenv.config({ override: true });
 
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
+import http from 'http';
+import connectDB from './config/db.js';
 
 import authRoutes from './routes/auth.js';
 import aiRoutes from './routes/ai.js';
@@ -11,7 +12,7 @@ import roadmapRoutes from './routes/roadmaps.js';
 import postsRoutes from './routes/posts.js';
 
 const app = express();
-
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -25,28 +26,26 @@ app.use('/api/roadmaps', roadmapRoutes);
 app.use('/api/posts', postsRoutes);
 
 app.get('/', (req, res) => {
-  res.send('EduAgent API is running');
+  res.send('EduAgent API is running with Clean Architecture 🚀');
 });
 
-// Database Connection
-const connectDB = async () => {
+// Future WebSocket Integration Support
+// const io = new Server(server);
+// io.on('connection', (socket) => { ... });
+
+// Start Server
+const startServer = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+    await connectDB();
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err.message);
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT} (DB Connection Failed)`);
+    });
   }
 };
 
-// Start Server
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}).catch((err) => {
-  console.log("Database connection failed, starting server anyway for testing...");
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} (DB Failed)`);
-  });
-});
+startServer();
