@@ -33,6 +33,8 @@ api.interceptors.response.use(
 export const authService = {
   login: (credentials) => api.post('/auth/login', credentials),
   signup: (userData) => api.post('/auth/signup', userData),
+  getMe: () => api.get('/auth/me'),
+  updateProfile: (profileData) => api.patch('/auth/profile', profileData),
 };
 
 // AI Services

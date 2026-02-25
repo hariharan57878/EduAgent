@@ -1,13 +1,15 @@
 export const validateRoadmapInput = (data) => {
-  const { role, interests } = data;
+  const { role, targetRole, experienceLevel, weeklyAvailability } = data;
   const errors = [];
 
-  if (!role || typeof role !== 'string' || role.trim().length === 0) {
-    errors.push({ field: 'role', message: 'Role is required and must be a non-empty string' });
+  const finalRole = targetRole || role;
+
+  if (!finalRole || typeof finalRole !== 'string' || finalRole.trim().length === 0) {
+    errors.push({ field: 'targetRole', message: 'Target role is required' });
   }
 
-  if (interests && !Array.isArray(interests)) {
-    errors.push({ field: 'interests', message: 'Interests must be an array of strings' });
+  if (weeklyAvailability !== undefined && (typeof weeklyAvailability !== 'number' || weeklyAvailability < 1)) {
+    errors.push({ field: 'weeklyAvailability', message: 'Invalid availability' });
   }
 
   if (errors.length > 0) {
@@ -19,8 +21,8 @@ export const validateRoadmapInput = (data) => {
   }
 
   return {
-    role: role.trim(),
-    interests: interests ? interests.map(i => i.trim()) : []
+    ...data,
+    targetRole: finalRole.trim()
   };
 };
 

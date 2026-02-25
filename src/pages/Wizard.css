@@ -1,0 +1,181 @@
+.wizard-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.wizard-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+
+.wizard-progress-bar {
+  height: 4px;
+  background: var(--border-light);
+  border-radius: 2px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.wizard-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.icon-badge {
+  width: 64px;
+  height: 64px;
+  background: var(--accent-primary-alpha);
+  color: var(--accent-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.wizard-step h2 {
+  font-size: 1.75rem;
+  color: var(--text-primary);
+}
+
+.wizard-step p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.wizard-step input[type="text"] {
+  width: 100%;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.wizard-step input[type="text"]:focus {
+  border-color: var(--accent-primary);
+  outline: none;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.nav-btn-option {
+  width: 100%;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn-option:hover {
+  background: var(--border-light);
+}
+
+.nav-btn-option.active {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary-alpha);
+  color: var(--accent-primary);
+}
+
+.shelf-control {
+  width: 100%;
+  padding: 1rem;
+}
+
+.value-display {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  color: var(--accent-primary);
+}
+
+.review-card {
+  text-align: left;
+  width: 100%;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.review-card ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.wizard-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.next-btn, .finish-btn {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.back-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.next-btn:disabled, .finish-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-primary);
+}

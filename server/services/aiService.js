@@ -28,31 +28,44 @@ export const getAIResponse = async (prompt) => {
   throw new Error("No AI providers configured or available");
 };
 
-export const generateRoadmap = async (role, interests) => {
+export const generateRoadmap = async (profile) => {
+  const { targetRole, experienceLevel, weeklyAvailability, targetOutcome, learningStyle, deadline } = profile;
+
   const prompt = `
-    Act as an expert Learning Operations Manager. Create a structured execution workspace for the role: "${role}".
-    User interests: ${interests ? interests.join(', ') : 'General'}.
+    Act as the EduAgent Learning Steward (Learning Operations Manager). 
+    Your mission: "Stop starting over. Start finishing."
     
-    The roadmap must be an execution timeline focused on mastery and completion.
-    "Stop starting over. Start finishing."
+    Create a structured, execution-ready learning roadmap for: "${targetRole}".
+    User Profile:
+    - Experience Level: ${experienceLevel}
+    - Weekly Availability: ${weeklyAvailability} hours/week
+    - Target Outcome: ${targetOutcome}
+    - Preferred Learning Style: ${learningStyle}
+    - Target Deadline: ${deadline || 'Flexible'}
+
+    Requirements:
+    1. Do NOT teach concepts. Generate a management timeline.
+    2. Structure phases that realistically fit the ${weeklyAvailability} hours/week constraint.
+    3. For a ${experienceLevel} level, adjust the complexity and foundational steps.
+    4. Provide high-quality external search queries for each module.
 
     Return the response STRICTLY as a JSON object with this structure:
     {
-      "title": "Roadmap Name",
-      "role": "${role}",
-      "description": "Structured execution path for ${role}",
+      "title": "${targetRole} Master Plan",
+      "role": "${targetRole}",
+      "description": "High-precision execution path for ${targetRole} (${experienceLevel})",
       "phases": [
         {
-          "title": "Phase Name (e.g., Tactical Foundations)",
-          "description": "Execution goal for this phase",
+          "title": "Phase Name",
+          "description": "Phase objective",
           "modules": [
             {
               "title": "Module Title",
               "type": "video/article/project",
-              "contentUrl": "Optimized search query for high-quality resources", 
-              "textContent": "Operational objective: What must be completed",
-              "estimatedTime": "45 mins",
-              "estimatedEffort": 45
+              "contentUrl": "Optimized search query", 
+              "textContent": "Operational objective: What to complete",
+              "estimatedTime": "approx time string",
+              "estimatedEffort": 60 // Minutes (integer)
             }
           ]
         }

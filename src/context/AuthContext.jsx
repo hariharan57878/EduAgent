@@ -13,9 +13,11 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       if (token) {
         try {
+          const res = await authService.getMe();
+          setUser(res.data);
           setIsAuthenticated(true);
         } catch (err) {
-          console.error(err);
+          console.error("Failed to load user", err);
           logout();
         }
       }

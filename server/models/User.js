@@ -28,7 +28,27 @@ const userSchema = new mongoose.Schema({
     },
     interests: [{
       type: String
-    }]
+    }],
+    onboardingCompleted: {
+      type: Boolean,
+      default: false
+    },
+    weeklyAvailability: {
+      type: Number, // Hours per week
+      default: 5
+    },
+    experienceLevel: {
+      type: String,
+      enum: ['beginner', 'intermediate', 'advanced'],
+      default: 'beginner'
+    },
+    targetOutcome: {
+      type: String,
+      enum: ['job', 'skill', 'certification', 'hobby'],
+      default: 'skill'
+    },
+    targetRole: String,
+    deadline: Date
   },
   stats: {
     streak: { type: Number, default: 0 },

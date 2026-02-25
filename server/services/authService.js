@@ -44,3 +44,18 @@ export const generateToken = (userId) => {
     { expiresIn: '30d' }
   );
 };
+
+export const updateProfile = async (userId, profileData) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
+
+  user.preferences = {
+    ...user.preferences,
+    ...profileData,
+    onboardingCompleted: profileData.onboardingCompleted ?? user.preferences.onboardingCompleted
+  };
+
+  user.updatedAt = Date.now();
+  await user.save();
+  return user;
+};
