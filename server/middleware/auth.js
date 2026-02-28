@@ -1,6 +1,14 @@
 import jwt from 'jsonwebtoken';
 
 export default function (req, res, next) {
+  // Check if demo mode is active
+  const isDemo = req.header('X-DEMO-MODE') === 'true' || req.isDemo;
+  if (isDemo) {
+    req.isDemo = true;
+    req.user = { id: 'demo_user_123' };
+    return next();
+  }
+
   // Get token from header
   const token = req.header('x-auth-token');
 

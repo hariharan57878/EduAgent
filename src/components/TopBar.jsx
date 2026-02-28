@@ -1,17 +1,18 @@
 import React from 'react';
-import { Flame, Star, Award } from 'lucide-react';
+import { Flame, Star, Award, TrendingUp } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import './TopBar.css';
 
 const TopBar = () => {
   const { user } = useAuth();
-  const { paths } = useApp();
+  const { paths, toggleInsights, trajectory } = useApp();
 
   const currentPath = paths[0] || { title: 'No active roadmap' };
   const progress = currentPath.progress || 0;
 
-  const streak = user?.stats?.streak || 0;
+  const streak = user?.stats?.currentStreak || user?.stats?.streak || 0;
+  const momentum = trajectory?.momentumState || 'STABLE';
   const level = user?.stats?.level || 1;
   const xp = user?.stats?.xp || 0;
 
@@ -41,10 +42,15 @@ const TopBar = () => {
           <div className="xp-badge">{xp} XP</div>
         </div>
 
-        <div className="stat-pill streak">
-          <Flame size={16} className="icon-orange" />
-          <span>{streak} days</span>
+        <div className={`stat-pill streak ${momentum.toLowerCase()}`}>
+          <Flame size={16} />
+          <span>{streak} day{streak !== 1 ? 's' : ''}</span>
         </div>
+
+        <button className="btn-insights" onClick={toggleInsights}>
+          <TrendingUp size={16} />
+          <span>View Insights</span>
+        </button>
 
         <div className="user-profile-summary">
           <img src={user?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"} alt="User" />

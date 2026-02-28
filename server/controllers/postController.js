@@ -2,6 +2,9 @@ import * as postService from '../services/postService.js';
 
 export const getRecentPosts = async (req, res) => {
   try {
+    if (req.isDemo) {
+      return res.json([]);
+    }
     const { channel } = req.query;
     const posts = await postService.getPosts(channel);
     res.json(posts);

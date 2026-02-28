@@ -5,31 +5,34 @@
   border-left: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
+  padding: var(--space-4);
   flex-shrink: 0;
   z-index: 80;
+  transition: all var(--transition-fast);
 }
 
 .steward-header {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-4);
 }
 
 .steward-header h3 {
-  font-size: 1.1rem;
+  font-size: var(--fs-h3);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-1);
   color: var(--text-primary);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .icon-burn {
-  color: #ef4444;
+  color: var(--error);
 }
 
 .steward-subtitle {
-  font-size: 0.8rem;
+  font-size: var(--fs-micro);
   color: var(--text-tertiary);
-  margin-top: 0.25rem;
+  margin-top: 4px;
 }
 
 .steward-body {
@@ -37,40 +40,37 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding-right: 0.5rem;
+  gap: var(--space-3);
+  padding-right: 4px;
 }
 
 .steward-card {
-  padding: 1.25rem;
+  padding: var(--space-3);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-light);
   background-color: var(--bg-secondary);
   position: relative;
-  transition: transform 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
 .steward-card:hover {
   transform: translateX(-4px);
+  border-color: var(--border-strong);
 }
 
 .card-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.type-icon {
-  color: var(--text-secondary);
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
 }
 
 .priority-tag {
-  font-size: 0.65rem;
-  font-weight: 700;
+  font-size: 10px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.15rem 0.4rem;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
   border-radius: 4px;
 }
 
@@ -97,14 +97,14 @@
 }
 
 .priority-low .priority-tag {
-  background-color: rgba(16, 185, 129, 0.1);
-  color: var(--success);
+  background-color: var(--accent-soft);
+  color: var(--accent-primary);
 }
 
 .dismiss-btn {
-  margin-left: auto;
   color: var(--text-tertiary);
-  opacity: 0.5;
+  opacity: 0.4;
+  transition: all var(--transition-fast);
 }
 
 .dismiss-btn:hover {
@@ -113,24 +113,25 @@
 }
 
 .suggestion-msg {
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-2);
 }
 
 .action-hint {
-  font-size: 0.8rem;
+  font-size: var(--fs-micro);
   color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.5rem;
-  border-radius: 4px;
+  background: var(--bg-card);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
 }
 
 .steward-footer {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
   border-top: 1px solid var(--border-light);
 }
 
@@ -141,13 +142,15 @@
 }
 
 .score-label {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--fs-micro);
+  font-weight: 700;
   color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .score-value {
-  font-size: 1.25rem;
+  font-size: var(--fs-h3);
   font-weight: 700;
   color: var(--accent-primary);
   font-family: var(--font-display);
@@ -161,11 +164,7 @@
   height: 200px;
   text-align: center;
   color: var(--text-tertiary);
-  gap: 1rem;
-}
-
-.empty-steward p {
-  font-size: 0.85rem;
+  gap: var(--space-2);
 }
 
 @media (max-width: 1400px) {

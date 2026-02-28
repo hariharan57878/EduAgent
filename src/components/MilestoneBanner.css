@@ -1,0 +1,75 @@
+.milestone-banner-overlay {
+  position: fixed;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  width: min(500px, 90vw);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.milestone-banner-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--accent-primary);
+  border-radius: 100px;
+  padding: 10px var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--accent-soft);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.milestone-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.milestone-icon.streak {
+  color: #f59e0b;
+}
+
+.milestone-icon.streak-gold {
+  color: #fbbf24;
+}
+
+.milestone-icon.progress {
+  color: #0ea5e9;
+}
+
+.milestone-icon.progress-half {
+  color: #8b5cf6;
+}
+
+.milestone-icon.mastery {
+  color: var(--success);
+}
+
+.banner-text h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.banner-text p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}

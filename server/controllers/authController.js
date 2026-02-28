@@ -4,6 +4,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 
 import { validateProfileUpdate } from '../dto/user.dto.js';
 import User from '../models/User.js';
+import { MOCK_DEMO_USER } from '../config/demoData.js';
 
 export const signup = asyncHandler(async (req, res) => {
   const validatedData = validateSignupInput(req.body);
@@ -29,6 +30,9 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const getMe = asyncHandler(async (req, res) => {
+  if (req.isDemo) {
+    return res.json(MOCK_DEMO_USER);
+  }
   const user = await User.findById(req.user.id).select('-passwordHash');
   res.json(user);
 });

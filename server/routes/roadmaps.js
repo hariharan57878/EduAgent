@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/', auth, roadmapController.getMyRoadmaps);
 router.get('/:id', auth, roadmapController.getRoadmap);
 router.post('/', auth, roadmapController.saveRoadmap);
+router.patch('/:id/modules', auth, roadmapController.updateModuleStatus);
 router.delete('/:id', auth, roadmapController.removeRoadmap);
 
 export default router;

@@ -1,13 +1,20 @@
 import * as roadmapService from '../services/roadmapService.js';
 import { validateSaveRoadmapInput } from '../dto/roadmap.dto.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { MOCK_DEMO_ROADMAP } from '../config/demoData.js';
 
 export const getMyRoadmaps = asyncHandler(async (req, res) => {
+  if (req.isDemo) {
+    return res.json([MOCK_DEMO_ROADMAP]);
+  }
   const roadmaps = await roadmapService.getUserRoadmaps(req.user.id);
   res.json(roadmaps);
 });
 
 export const getRoadmap = asyncHandler(async (req, res) => {
+  if (req.isDemo) {
+    return res.json(MOCK_DEMO_ROADMAP);
+  }
   const roadmap = await roadmapService.getRoadmapById(req.params.id);
 
   if (!roadmap) {
@@ -48,4 +55,16 @@ export const removeRoadmap = asyncHandler(async (req, res) => {
 
   await roadmapService.deleteRoadmap(req.params.id);
   res.json({ msg: 'Roadmap removed' });
+});
+
+export const updateModuleStatus = asyncHandler(async (req, res) => {
+  const { phaseIdx, moduleIdx, status } = req.body;
+  const result = await roadmapService.updateModuleStatus(
+    req.user.id,
+    req.params.id,
+    phaseIdx,
+    moduleIdx,
+    status
+  );
+  res.json(result);
 });

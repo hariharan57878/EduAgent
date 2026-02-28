@@ -52,10 +52,19 @@ const userSchema = new mongoose.Schema({
   },
   stats: {
     streak: { type: Number, default: 0 },
+    currentStreak: { type: Number, default: 0 },
+    longestStreak: { type: Number, default: 0 },
+    lastCompletionDate: { type: Date },
+    dailyCompletionCount: { type: Number, default: 0 },
     xp: { type: Number, default: 0 },
     level: { type: Number, default: 1 },
     learningHours: { type: Number, default: 0 },
-    badges: [{ type: String }] // Array of badge IDs/Names
+    badges: [{ type: String }],
+    weeklyStats: {
+      modulesCompleted: { type: Number, default: 0 },
+      timeInvested: { type: Number, default: 0 },
+      lastReviewDate: { type: Date }
+    }
   },
   createdAt: {
     type: Date,

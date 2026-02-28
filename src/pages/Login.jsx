@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
 import './Login.css';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const { login, register } = useAuth();
+  const { startDemoMode } = useApp();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -41,9 +45,16 @@ const Login = () => {
       res = await register(formData.username, formData.email, formData.password, { interests: formData.interests });
     }
 
-    if (!res.success) {
-      setError(res.message);
+    if (res && res.success) {
+      navigate('/');
+    } else {
+      setError(res?.message || 'Authentication failed');
     }
+  };
+
+  const handleDemo = async () => {
+    await startDemoMode();
+    navigate('/');
   };
 
   return (
@@ -119,12 +130,31 @@ const Login = () => {
           </button>
         </form>
 
+        <div className="demo-separator">
+          <span>OR</span>
+        </div>
+
+        <button className="demo-btn" onClick={handleDemo}>
+          🚀 Try Live Demo
+        </button>
+
         <p className="auth-toggle">
           {isLogin ? "Don't have an account?" : "Already have an account?"}
           <span onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? 'Sign Up' : 'Login'}
           </span>
         </p>
+
+        <div className="about-link" onClick={() => navigate('/about')} style={{
+          marginTop: '1.5rem',
+          fontSize: 'var(--fs-small)',
+          color: 'var(--text-tertiary)',
+          cursor: 'pointer',
+          textAlign: 'center',
+          textDecoration: 'underline'
+        }}>
+          About EduAgent
+        </div>
       </div>
     </div>
   );

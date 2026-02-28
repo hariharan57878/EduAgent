@@ -11,6 +11,8 @@ import aiRoutes from './routes/ai.js';
 import roadmapRoutes from './routes/roadmaps.js';
 import postsRoutes from './routes/posts.js';
 import onboardingRoutes from './routes/onboarding.js';
+import stewardRoutes from './routes/steward.js';
+import { demoMiddleware } from './middleware/demoMiddleware.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -19,6 +21,7 @@ const PORT = env.PORT;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(demoMiddleware);
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -26,6 +29,7 @@ app.use('/api/agent', aiRoutes);
 app.use('/api/roadmaps', roadmapRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/steward', stewardRoutes);
 
 app.get('/', (req, res) => {
   res.send('EduAgent Enterprise API is running 🚀');

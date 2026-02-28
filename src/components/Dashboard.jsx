@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight,
@@ -10,19 +10,48 @@ import {
   ListOrdered,
   MoreHorizontal,
   ExternalLink,
-  Plus
+  Plus,
+  TrendingUp
 } from 'lucide-react';
+import TodayFocus from './TodayFocus';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
+import client from '../api/client';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const { paths, completeModule } = useApp();
+  const { paths, completeModule, trajectory } = useApp();
   const { user } = useAuth();
-  const [viewMode, setViewMode] = useState('timeline'); // 'timeline' or 'kanban'
+  const [viewMode, setViewMode] = useState('timeline');
   const [expandedPhases, setExpandedPhases] = useState({});
+  const [todayFocus, setTodayFocus] = useState(null);
 
   const currentPath = paths[0];
+
+  useEffect(() => {
+    const fetchFocus = async () => {
+      try {
+        const res = await client.get('/steward/today-focus');
+        setTodayFocus(res.data);
+      } catch (err) {
+        console.error("Failed to fetch today's focus", err);
+      }
+    };
+    if (user) fetchFocus();
+  }, [user, paths]); // Re-fetch on path updates (like completion)
+
+  const handleStartFocus = (pIdx, mIdx) => {
+    setExpandedPhases(prev => ({ ...prev, [pIdx]: true }));
+    // Small delay to allow expansion animation to start/complete
+    setTimeout(() => {
+      const moduleEl = document.getElementById(`module-${pIdx}-${mIdx}`);
+      if (moduleEl) {
+        moduleEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        moduleEl.classList.add('focused-pulse');
+        setTimeout(() => moduleEl.classList.remove('focused-pulse'), 2000);
+      }
+    }, 300);
+  };
 
   const handleComplete = (pIdx, mIdx) => {
     if (currentPath.id) {
@@ -91,7 +120,7 @@ const Dashboard = () => {
                 >
                   <div className="module-list">
                     {phase.modules.map((module, mIdx) => (
-                      <div key={mIdx} className="module-item">
+                      <div key={mIdx} id={`module-${pIdx}-${mIdx}`} className="module-item">
                         <div
                           className="module-status"
                           onClick={() => handleComplete(pIdx, mIdx)}
@@ -185,7 +214,33 @@ const Dashboard = () => {
         </div>
       </header>
 
+      {trajectory && (
+        <div className="trajectory-summary-bar">
+          <div className="indicator">
+            <TrendingUp size={14} className="icon-blue" />
+            <span className="label">Weekly Rate:</span>
+            <span className="value">{trajectory.weeklyCompletionRate} modules</span>
+          </div>
+          <div className="indicator">
+            <ListOrdered size={14} className="icon-purple" />
+            <span className="label">Remaining:</span>
+            <span className="value">{trajectory.remainingModules} modules</span>
+          </div>
+          <div className="indicator">
+            <Clock size={14} className="icon-orange" />
+            <span className="label">ETA:</span>
+            <span className="value">{trajectory.estimatedWeeksToFinish} weeks</span>
+          </div>
+          <div className={`indicator momentum ${trajectory.momentumState?.toLowerCase()}`}>
+            <div className="momentum-dot" />
+            <span className="label">Momentum:</span>
+            <span className="value">{trajectory.momentumState}</span>
+          </div>
+        </div>
+      )}
+
       <div className="command-workspace">
+        {viewMode === 'timeline' && <TodayFocus focus={todayFocus} onStart={handleStartFocus} />}
         {viewMode === 'timeline' ? renderTimeline() : renderKanban()}
       </div>
     </div>
