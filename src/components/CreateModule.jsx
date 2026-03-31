@@ -1,56 +1,56 @@
 import React, { useState } from 'react';
-import { Mic, Type, Upload, ArrowRight, Sparkles, Bot } from 'lucide-react';
+import { Bot, Settings2, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import VoiceModule from './VoiceModule';
-import TextModule from './TextModule';
-import { UploadModule, GenerateModule } from './UploadModule';
 import './CreateModule.css';
-import { useApp } from '../context/AppContext';
 
-const CreateModule = () => {
-  const [selectedMode, setSelectedMode] = useState(null);
+const CreateModule = ({ data }) => {
+  const [selectedMode, setSelectedMode] = useState('ai');
   const navigate = useNavigate();
-  const { addPath } = useApp();
 
-  // Logic moved to GenerateModule component
-  const handleGenerate = () => {
-    // No-op or log
-    console.log("Generate Module handles its own submission");
+  const handleContinue = () => {
+    if (selectedMode === 'ai') {
+      console.log('Proceeding to AI generation with data:', data);
+      
+      const userGoal = data?.goal || "Full Stack Developer";
+      const words = userGoal.split(' ').filter(w => w.length > 3);
+      const coreTopic = words.length > 0 ? words[words.length - 1] : userGoal;
+      const capTopic = coreTopic.charAt(0).toUpperCase() + coreTopic.slice(1);
+
+      const mockRoadmap = {
+        title: userGoal,
+        modules: [
+          { id: "1", title: `Introduction to ${capTopic}`, description: `Foundational concepts and architecture of ${capTopic}`, status: "Not Started" },
+          { id: "2", title: `Core Logic & Syntax`, description: `Understanding logic flows and standard practices in ${userGoal}`, status: "Not Started" },
+          { id: "3", title: `Advanced Tooling`, description: `Explore frameworks and professional tools for ${capTopic}`, status: "Not Started" },
+          { id: "4", title: `Project Architecture`, description: `Designing scalable solutions`, status: "Not Started" },
+          { id: "5", title: `Capstone Implementation`, description: `Apply knowledge with real-world builds`, status: "Not Started" }
+        ]
+      };
+      localStorage.setItem("roadmap", JSON.stringify(mockRoadmap));
+      navigate('/roadmap', { state: { roadmap: mockRoadmap } });
+    } else {
+      console.log('Proceeding to manual setup with data:', data);
+      navigate('/roadmap', { state: { roadmap: [] } });
+    }
   };
 
   const creationOptions = [
     {
-      id: 'voice',
-      icon: Mic,
-      title: 'Train Voice Model',
-      description: 'Clone a voice or upload samples to personalize your AI tutor.',
-      color: '#6366f1', // Indigo
-      accent: 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)'
-    },
-    {
-      id: 'text',
-      icon: Bot, // Changed icon to Bot for AI chat relevance
-      title: 'Personal AI Architect',
-      description: 'Discuss your goals with our AI to build a perfectly tailored roadmap.',
+      id: 'ai',
+      icon: Bot,
+      title: 'AI Guided Roadmap',
+      description: 'Let AI create a structured roadmap based on your goal and level.',
       color: '#10b981', // Emerald
-      accent: 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)'
+      accent: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.2) 100%)'
     },
     {
-      id: 'upload',
-      icon: Upload,
-      title: 'Upload Material',
-      description: 'Drag & drop PDFs, images, or notes.',
-      color: '#f59e0b', // Amber
-      accent: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)'
-    },
-    {
-      id: 'generate',
-      icon: Sparkles,
-      title: 'Generate Module',
-      description: 'Combine inputs and create your roadmap.',
-      color: '#8b5cf6', // Violet
-      accent: 'linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)'
+      id: 'manual',
+      icon: Settings2,
+      title: 'Manual Setup',
+      description: 'Create and customize your own roadmap step by step.',
+      color: 'var(--text-secondary)',
+      accent: 'var(--bg-secondary)'
     }
   ];
 
@@ -61,8 +61,8 @@ const CreateModule = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1>Start a New Learning Journey</h1>
-        <p>Choose how you want to define your learning path.</p>
+        <h1>Choose how to build your roadmap</h1>
+        <p>We’ll use your goal to create a structured learning path.</p>
       </motion.div>
 
       <div className="options-grid">
@@ -89,27 +89,16 @@ const CreateModule = () => {
         ))}
       </div>
 
-      {/* Dynamic Content Area based on Selection */}
-
-      {/* Voice Input Interface */}
-      {selectedMode === 'voice' && (
-        <VoiceModule />
-      )}
-
-      {/* Text Input Interface */}
-      {selectedMode === 'text' && (
-        <TextModule />
-      )}
-
-      {/* Upload Interface */}
-      {selectedMode === 'upload' && (
-        <UploadModule />
-      )}
-
-      {/* Generate Interface */}
-      {selectedMode === 'generate' && (
-        <GenerateModule onGenerate={handleGenerate} />
-      )}
+      <motion.div 
+        className="create-action-area"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+        <button className="btn-primary btn-continue" onClick={handleContinue}>
+          Continue
+        </button>
+      </motion.div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowLeft, Sparkles, CheckCircle, Target, Clock, Brain } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Sparkles, CheckCircle, Target, Clock, Brain, Bot, X, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { authService, aiService, roadmapService, onboardingService } from '../services/api';
@@ -20,6 +20,55 @@ const Wizard = () => {
     deadline: '',
     learningStyle: user?.preferences?.learningStyle || 'visual'
   });
+
+  const [assessmentModalOpen, setAssessmentModalOpen] = useState(false);
+  const [assessmentStep, setAssessmentStep] = useState('intro');
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isAiTyping, setIsAiTyping] = useState(false);
+  const [assessmentResult, setAssessmentResult] = useState('');
+
+  const handleStartAssessment = () => {
+    setAssessmentStep('chat');
+    setChatMessages([
+      { sender: 'ai', text: `Hi! To accurately determine your skill level for "${formData.targetRole || 'your goal'}", tell me a bit about your past experience or projects in this area.` }
+    ]);
+  };
+
+  const handleSendMessage = () => {
+    if (!chatInput.trim()) return;
+    
+    const newUserMsg = { sender: 'user', text: chatInput };
+    const newHistory = [...chatMessages, newUserMsg];
+    setChatMessages(newHistory);
+    setChatInput('');
+    setIsAiTyping(true);
+
+    setTimeout(() => {
+      setIsAiTyping(false);
+      // Faux AI state machine
+      if (newHistory.length === 2) {
+        setChatMessages([...newHistory, { sender: 'ai', text: "Got it! Are there any specific advanced tools, frameworks, or complex problems you've worked with recently?" }]);
+      } else if (newHistory.length >= 4) {
+        setAssessmentStep('analyzing');
+        setTimeout(() => {
+          const totalLen = newHistory.filter(m => m.sender === 'user').map(m => m.text).join('').length;
+          let level = 'beginner';
+          if (totalLen > 50) level = 'intermediate';
+          if (totalLen > 150) level = 'advanced';
+          setAssessmentResult(level);
+          setAssessmentStep('result');
+        }, 1500);
+      }
+    }, 1200);
+  };
+
+  const handleApplyResult = () => {
+    setFormData({ ...formData, experienceLevel: assessmentResult });
+    setAssessmentModalOpen(false);
+    setAssessmentStep('intro');
+    setChatMessages([]);
+  };
 
   const nextStep = () => setStep(s => s + 1);
   const prevStep = () => setStep(s => s - 1);
@@ -86,6 +135,12 @@ const Wizard = () => {
                   </button>
                 ))}
               </div>
+              <button 
+                className="ai-assess-btn"
+                onClick={() => { setAssessmentModalOpen(true); setAssessmentStep('intro'); }}
+              >
+                <Bot size={16} /> Assess my level with AI
+              </button>
             </div>
           </motion.div>
         );
@@ -150,6 +205,83 @@ const Wizard = () => {
 
   return (
     <div className="wizard-overlay">
+      {assessmentModalOpen && (
+        <div className="ai-assessment-overlay">
+          <motion.div className="ai-assessment-modal" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+            <button className="close-modal-btn" onClick={() => setAssessmentModalOpen(false)}><X size={20}/></button>
+            <div className="modal-content-inner">
+              <Bot size={32} color="#8b5cf6" />
+              {assessmentStep === 'intro' && (
+                <>
+                  <h3>Quick Skill Assessment</h3>
+                  <p>Answer a few questions to accurately determine your starting level.</p>
+                  <button className="btn-primary" onClick={handleStartAssessment}>Start Assessment</button>
+                </>
+              )}
+              {assessmentStep === 'chat' && (
+                <div className="assessment-chat" style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', height: '320px' }}>
+                  <div className="chat-history" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', padding: '4px', scrollbarWidth: 'thin' }}>
+                    {chatMessages.map((msg, idx) => (
+                      <div key={idx} style={{ 
+                        alignSelf: msg.sender === 'ai' ? 'flex-start' : 'flex-end',
+                        background: msg.sender === 'ai' ? 'var(--bg-secondary)' : 'var(--accent-primary)',
+                        color: msg.sender === 'ai' ? 'var(--text-primary)' : 'white',
+                        padding: '10px 14px',
+                        borderRadius: '12px',
+                        maxWidth: '85%',
+                        fontSize: '14px',
+                        lineHeight: '1.4',
+                        boxShadow: 'var(--shadow-sm)'
+                      }}>
+                        {msg.text}
+                      </div>
+                    ))}
+                    {isAiTyping && (
+                      <div style={{ alignSelf: 'flex-start', background: 'var(--bg-secondary)', padding: '10px 14px', borderRadius: '12px', fontSize: '14px' }}>
+                        <Loader2 size={16} className="spin-icon" color="var(--text-secondary)" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="chat-input-area" style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                    <input 
+                      type="text" 
+                      value={chatInput} 
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                      placeholder="Reply to AI..."
+                      style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-light)', background: 'var(--bg-card)', color: 'var(--text-primary)' }}
+                      autoFocus
+                    />
+                    <button 
+                      className="btn-primary" 
+                      onClick={handleSendMessage}
+                      disabled={!chatInput.trim() || isAiTyping}
+                      style={{ padding: '0 16px', borderRadius: '8px' }}
+                    >
+                      Send
+                    </button>
+                  </div>
+                </div>
+              )}
+              {assessmentStep === 'analyzing' && (
+                <div className="analyzing-state">
+                  <Loader2 size={32} className="spin-icon" color="#8b5cf6" />
+                  <p>Analyzing your responses...</p>
+                </div>
+              )}
+              {assessmentStep === 'result' && (
+                <>
+                  <h3>Analysis Complete</h3>
+                  <div className="result-badge">{assessmentResult.toUpperCase()}</div>
+                  <p>Based on your answers, we recommend starting at this block.</p>
+                  <button className="btn-primary" onClick={handleApplyResult}>Apply & Continue</button>
+                </>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       <div className="wizard-card glass-card">
         <div className="wizard-progress-bar">
           <div className="progress-fill" style={{ width: `${(step / 5) * 100}%` }}></div>

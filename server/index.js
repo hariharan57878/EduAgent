@@ -12,6 +12,7 @@ import roadmapRoutes from './routes/roadmaps.js';
 import postsRoutes from './routes/posts.js';
 import onboardingRoutes from './routes/onboarding.js';
 import stewardRoutes from './routes/steward.js';
+import workspaceRoutes from './routes/workspace.js';
 import { demoMiddleware } from './middleware/demoMiddleware.js';
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/roadmaps', roadmapRoutes);
 app.use('/api/posts', postsRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/steward', stewardRoutes);
+app.use('/api/workspace', workspaceRoutes);
 
 app.get('/', (req, res) => {
   res.send('EduAgent Enterprise API is running 🚀');

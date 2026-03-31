@@ -3,12 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, AlertCircle, TrendingUp, Target, X, Info } from 'lucide-react';
 import client from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
 import './StewardPanel.css';
 
 const StewardPanel = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
   const { user } = useAuth();
+  const { paths } = useApp();
+  const hasRoadmap = paths && paths.length > 0;
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -34,6 +37,8 @@ const StewardPanel = () => {
       default: return <Target size={18} />;
     }
   };
+
+  if (!hasRoadmap) return null;
 
   if (collapsed) {
     return (

@@ -1,247 +1,193 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ChevronRight,
-  ChevronDown,
-  CheckCircle2,
-  Circle,
-  Clock,
-  Layout,
-  ListOrdered,
-  MoreHorizontal,
-  ExternalLink,
-  Plus,
-  TrendingUp
-} from 'lucide-react';
-import TodayFocus from './TodayFocus';
-import { useApp } from '../context/AppContext';
-import { useAuth } from '../context/AuthContext';
-import client from '../api/client';
+import { useNavigate } from 'react-router-dom';
+import { Layout, PlayCircle, CheckCircle2, Plus, Trash2, Sparkles } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const { paths, completeModule, trajectory } = useApp();
-  const { user } = useAuth();
-  const [viewMode, setViewMode] = useState('timeline');
-  const [expandedPhases, setExpandedPhases] = useState({});
-  const [todayFocus, setTodayFocus] = useState(null);
-
-  const currentPath = paths[0];
+  const navigate = useNavigate();
+  const [roadmaps, setRoadmaps] = useState([]);
+  const [learningStats, setLearningStats] = useState({ totalTime: 0, style: 'Steady Learner' });
 
   useEffect(() => {
-    const fetchFocus = async () => {
+    // Retrieve collection
+    let rms = [];
+    try {
+      rms = JSON.parse(localStorage.getItem('roadmaps') || '[]');
+    } catch(e) {}
+
+    // Sync active roadmap to collection
+    const activeSaved = localStorage.getItem('roadmap');
+    if (activeSaved) {
       try {
-        const res = await client.get('/steward/today-focus');
-        setTodayFocus(res.data);
-      } catch (err) {
-        console.error("Failed to fetch today's focus", err);
-      }
-    };
-    if (user) fetchFocus();
-  }, [user, paths]); // Re-fetch on path updates (like completion)
-
-  const handleStartFocus = (pIdx, mIdx) => {
-    setExpandedPhases(prev => ({ ...prev, [pIdx]: true }));
-    // Small delay to allow expansion animation to start/complete
-    setTimeout(() => {
-      const moduleEl = document.getElementById(`module-${pIdx}-${mIdx}`);
-      if (moduleEl) {
-        moduleEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        moduleEl.classList.add('focused-pulse');
-        setTimeout(() => moduleEl.classList.remove('focused-pulse'), 2000);
-      }
-    }, 300);
-  };
-
-  const handleComplete = (pIdx, mIdx) => {
-    if (currentPath.id) {
-      completeModule(currentPath.id, pIdx, mIdx);
+        const activeRm = JSON.parse(activeSaved);
+        if (activeRm && activeRm.title) {
+          const idx = rms.findIndex(r => r.title === activeRm.title);
+          if (idx > -1) {
+            rms[idx] = activeRm; // Update progress
+          } else {
+            rms.push(activeRm); // Add new
+          }
+          localStorage.setItem('roadmaps', JSON.stringify(rms));
+        }
+      } catch(e) {}
     }
+    
+    setRoadmaps(rms);
+
+    // Compute Learning stats
+    const learningData = JSON.parse(localStorage.getItem('learningData') || '[]');
+    if (learningData.length > 0) {
+       const totalTime = learningData.reduce((acc, curr) => acc + (curr.timeSpent || 0), 0);
+       const avgTime = totalTime / learningData.length;
+       let style = 'Steady Learner';
+       if (avgTime < 10) style = 'Fast Learner';
+       if (avgTime > 30) style = 'Deep Learner';
+       setLearningStats({ totalTime, style });
+    }
+  }, []);
+
+  const handleDelete = (title) => {
+    if(!window.confirm(`Are you sure you want to delete the roadmap for "${title}"?`)) return;
+    
+    // Remove from array
+    const updated = roadmaps.filter(r => r.title !== title);
+    setRoadmaps(updated);
+    localStorage.setItem('roadmaps', JSON.stringify(updated));
+
+    // Remove if active
+    const activeSaved = localStorage.getItem('roadmap');
+    if (activeSaved) {
+      try {
+        const activeRm = JSON.parse(activeSaved);
+        if (activeRm.title === title) {
+          localStorage.removeItem('roadmap');
+        }
+      } catch(e) {}
+    }
+    // Delete associated workspace save
+    localStorage.removeItem(`workspace_${title}`);
   };
 
-  if (!currentPath) {
+  if (roadmaps.length === 0) {
     return (
-      <div className="empty-dashboard">
-        <div className="empty-content">
-          <div className="empty-icon-wrapper">
-            <Layout size={48} />
+      <div className="empty-dashboard-container">
+        <div className="empty-state-card">
+          <div className="empty-icon-highlight">
+            <Layout size={42} />
           </div>
-          <h2>Ready to architect your success?</h2>
-          <p>You don't have an active roadmap yet. Let's build your execution plan.</p>
-          <button className="btn-primary" onClick={() => window.location.href = '/create-module'}>
-            <Plus size={18} /> Create Execution Plan
+          <h2>Start your learning system</h2>
+          <p>Turn your goal into a clear roadmap and begin your structured learning process.</p>
+          <button className="btn-primary btn-large" onClick={() => navigate('/create/goal')}>
+            Create Roadmap
           </button>
         </div>
       </div>
     );
   }
 
-  const togglePhase = (phaseId) => {
-    setExpandedPhases(prev => ({
-      ...prev,
-      [phaseId]: !prev[phaseId]
-    }));
-  };
-
-  const renderTimeline = () => (
-    <div className="timeline-view">
-      {currentPath.phases.map((phase, pIdx) => {
-        const isOpen = expandedPhases[pIdx] || pIdx === 0;
-        const phaseProgress = 45; // Placeholder
-
-        return (
-          <div key={pIdx} className={`phase-card ${isOpen ? 'open' : ''}`}>
-            <div className="phase-header" onClick={() => togglePhase(pIdx)}>
-              <div className="phase-main">
-                {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
-                <div className="phase-info">
-                  <h3>{phase.title}</h3>
-                  <p>{phase.description}</p>
-                </div>
-              </div>
-
-              <div className="phase-meta">
-                <div className="phase-progress-mini">
-                  <div className="mini-bar-bg">
-                    <div className="mini-bar-fill" style={{ width: `${phaseProgress}%` }} />
-                  </div>
-                  <span>{phaseProgress}%</span>
-                </div>
-              </div>
-            </div>
-
-            <AnimatePresence>
-              {isOpen && (
-                <motion.div
-                  className="phase-content"
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                >
-                  <div className="module-list">
-                    {phase.modules.map((module, mIdx) => (
-                      <div key={mIdx} id={`module-${pIdx}-${mIdx}`} className="module-item">
-                        <div
-                          className="module-status"
-                          onClick={() => handleComplete(pIdx, mIdx)}
-                          style={{ cursor: 'pointer' }}
-                        >
-                          {module.status === 'completed' ? (
-                            <CheckCircle2 size={20} className="status-done" />
-                          ) : (
-                            <Circle size={20} className="status-todo" />
-                          )}
-                        </div>
-
-                        <div className="module-details">
-                          <div className="module-header-row">
-                            <h4>{module.title}</h4>
-                            <div className="module-actions">
-                              <span className="effort-badge"><Clock size={12} /> {module.estimatedTime || '30m'}</span>
-                              <button className="action-btn"><ExternalLink size={14} /></button>
-                              <button className="action-btn"><MoreHorizontal size={14} /></button>
-                            </div>
-                          </div>
-                          <p className="module-objective">{module.textContent || 'Master the core principles and execute the basic requirements.'}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        );
-      })}
-    </div>
-  );
-
-  const renderKanban = () => (
-    <div className="kanban-view">
-      <div className="kanban-column">
-        <div className="column-header">To Learn <span className="count">12</span></div>
-        <div className="kanban-cards">
-          {/* Example Kanban Card */}
-          <div className="kanban-card">
-            <h4>Advanced React Patterns</h4>
-            <div className="card-footer">
-              <span className="effort-badge">45m</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="kanban-column highlight">
-        <div className="column-header">In Progress <span className="count">2</span></div>
-        <div className="kanban-cards">
-          <div className="kanban-card">
-            <h4>Node.js Event Loop</h4>
-            <div className="card-footer">
-              <span className="effort-badge">60m</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="kanban-column">
-        <div className="column-header">Completed <span className="count">45</span></div>
-        <div className="kanban-cards">
-          {/* Completed Cards */}
-        </div>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="dashboard-v2">
-      <header className="content-header">
-        <div className="header-text">
-          <h1>Learning Command Center</h1>
-          <p>Execute your roadmap to mastery.</p>
+    <div className="dashboard-container">
+      <header className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h1>Welcome back</h1>
+          <p>Manage your learning roadmaps and maintain your momentum.</p>
+          {learningStats.totalTime > 0 && (
+            <div className="learning-style-badge">
+               <Sparkles size={14} /> <strong>Your Style:</strong> {learningStats.style} • {learningStats.totalTime} mins spent
+            </div>
+          )}
         </div>
-
-        <div className="view-toggle">
-          <button
-            className={`toggle-btn ${viewMode === 'timeline' ? 'active' : ''}`}
-            onClick={() => setViewMode('timeline')}
-          >
-            <ListOrdered size={16} /> Timeline
-          </button>
-          <button
-            className={`toggle-btn ${viewMode === 'kanban' ? 'active' : ''}`}
-            onClick={() => setViewMode('kanban')}
-          >
-            <Layout size={16} /> Kanban
-          </button>
-        </div>
+        <button 
+          className="btn-primary" 
+          onClick={() => navigate('/create/goal')}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
+          <Plus size={16} /> New Roadmap
+        </button>
       </header>
 
-      {trajectory && (
-        <div className="trajectory-summary-bar">
-          <div className="indicator">
-            <TrendingUp size={14} className="icon-blue" />
-            <span className="label">Weekly Rate:</span>
-            <span className="value">{trajectory.weeklyCompletionRate} modules</span>
-          </div>
-          <div className="indicator">
-            <ListOrdered size={14} className="icon-purple" />
-            <span className="label">Remaining:</span>
-            <span className="value">{trajectory.remainingModules} modules</span>
-          </div>
-          <div className="indicator">
-            <Clock size={14} className="icon-orange" />
-            <span className="label">ETA:</span>
-            <span className="value">{trajectory.estimatedWeeksToFinish} weeks</span>
-          </div>
-          <div className={`indicator momentum ${trajectory.momentumState?.toLowerCase()}`}>
-            <div className="momentum-dot" />
-            <span className="label">Momentum:</span>
-            <span className="value">{trajectory.momentumState}</span>
-          </div>
-        </div>
-      )}
+      <div className="dashboard-summary-content" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '24px' }}>
+        <AnimatePresence>
+          {roadmaps.map((rm, idx) => {
+            const modules = rm.modules || [];
+            const completedCount = modules.filter(m => m.status === 'Completed' || m.status === 'completed').length;
+            const progress = modules.length > 0 ? Math.round((completedCount / modules.length) * 100) : 0;
+            const nextModule = modules.find(m => m.status !== 'Completed' && m.status !== 'completed');
 
-      <div className="command-workspace">
-        {viewMode === 'timeline' && <TodayFocus focus={todayFocus} onStart={handleStartFocus} />}
-        {viewMode === 'timeline' ? renderTimeline() : renderKanban()}
+            const handleStartLearning = () => {
+              localStorage.setItem('roadmap', JSON.stringify(rm)); // Set this specific roadmap as active
+              if (nextModule) {
+                navigate(`/workspace/${encodeURIComponent(nextModule.title)}`, { 
+                  state: { module: nextModule, roadmapTitle: rm.title, roadmapObj: rm } 
+                });
+              } else {
+                navigate('/roadmap');
+              }
+            };
+
+            const handleViewFull = () => {
+              localStorage.setItem('roadmap', JSON.stringify(rm)); // Set this specific roadmap as active
+              navigate('/roadmap');
+            };
+
+            return (
+              <motion.div 
+                key={rm.title + idx}
+                className="current-roadmap-card glass-card"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+              >
+                <div className="cr-header" style={{ alignItems: 'flex-start' }}>
+                  <div>
+                    <h3 style={{color: '#8b5cf6', margin: 0, fontSize: '13px', textTransform: 'uppercase', fontWeight: 700}}>Learning Path</h3>
+                    <h2 style={{marginTop: '4px', fontSize: '20px'}}>{rm.title}</h2>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button className="btn-secondary" onClick={handleViewFull} style={{ padding: '8px 12px', fontSize: '12px' }}>
+                      View Full
+                    </button>
+                    <button className="btn-secondary" onClick={() => handleDelete(rm.title)} title="Delete Roadmap" style={{ padding: '8px', color: '#ef4444', borderColor: '#fca5a5', backgroundColor: '#fef2f2' }}>
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="roadmap-progress-widget" style={{ marginBottom: 'auto' }}>
+                  <div className="progress-labels">
+                    <span className="progress-text">Overall Progress</span>
+                    <span className="progress-percentage">{progress}% completed</span>
+                  </div>
+                  <div className="progress-track" style={{ height: '8px' }}>
+                    <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+                  </div>
+                </div>
+
+                {nextModule ? (
+                  <div className="next-module-section" style={{ marginTop: '20px' }}>
+                    <h4 style={{ fontSize: '12px', color: '#6b7280', textTransform: 'uppercase', marginBottom: '8px' }}>Up Next</h4>
+                    <div className="next-module-plate" style={{ padding: '12px' }}>
+                      <div className="next-info">
+                        <h5 style={{ fontSize: '14px', margin: 0 }}>{nextModule.title}</h5>
+                      </div>
+                      <button className="btn-primary" onClick={handleStartLearning} style={{ padding: '8px 16px', fontSize: '13px' }}>
+                        <PlayCircle size={16} /> Continue
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="all-caught-up" style={{ marginTop: '20px', padding: '16px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', textAlign: 'center', border: '1px solid rgba(16,185,129,0.2)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontWeight: 'bold' }}>
+                      <CheckCircle2 size={18} /> Course Completed!
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </div>
   );

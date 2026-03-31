@@ -46,7 +46,12 @@ const Login = () => {
     }
 
     if (res && res.success) {
-      navigate('/');
+      if (isLogin) {
+        navigate('/');
+      } else {
+        // TODO: Ensure Goal Setup Page is implemented properly later
+        navigate('/goal-setup');
+      }
     } else {
       setError(res?.message || 'Authentication failed');
     }
@@ -63,8 +68,8 @@ const Login = () => {
         <h1 className="login-logo">EduAgent</h1>
         <p className="login-subtitle">
           {isLogin
-            ? 'Welcome back! Continue your personalized learning journey.'
-            : 'Start your AI-guided personalized learning path today.'}
+            ? 'Access your learning workspace and continue your progress.'
+            : 'Create your account to start building your learning system.'}
         </p>
 
         {error && <div className="error-message">{error}</div>}
@@ -109,8 +114,8 @@ const Login = () => {
           </div>
 
           {!isLogin && (
-            <div className="form-group">
-              <label>Interests (Optional)</label>
+            <div className="form-group interests-section">
+              <label>Areas of Interest (Optional)</label>
               <div className="interests-grid">
                 {availableInterests.map(tag => (
                   <div
@@ -135,7 +140,7 @@ const Login = () => {
         </div>
 
         <button className="demo-btn" onClick={handleDemo}>
-          🚀 Try Live Demo
+          Try Live Demo
         </button>
 
         <p className="auth-toggle">

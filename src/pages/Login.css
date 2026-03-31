@@ -60,7 +60,7 @@
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 .form-group {
@@ -83,12 +83,12 @@
   border: 1px solid var(--border-light);
   color: var(--text-primary);
   font-size: var(--fs-body);
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
 .form-group input:focus {
   border-color: var(--accent-primary);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
   outline: none;
 }
 
@@ -99,15 +99,16 @@
   border-radius: var(--radius-sm);
   font-weight: 700;
   font-size: var(--fs-small);
-  transition: all var(--transition-fast);
-  margin-top: var(--space-2);
+  transition: all 0.2s ease;
+  margin-top: var(--space-1);
   border: none;
   cursor: pointer;
 }
 
 .login-btn:hover {
   background: var(--accent-hover);
-  box-shadow: 0 4px 12px rgba(var(--accent-rgb), 0.3);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  transform: translateY(-1px);
 }
 
 .demo-separator {
@@ -139,20 +140,21 @@
 
 .demo-btn {
   width: 100%;
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-3);
   background: transparent;
-  color: var(--accent-primary);
-  border: 2px solid var(--accent-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: var(--fs-small);
+  font-weight: 500;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
 .demo-btn:hover {
-  background: var(--accent-soft);
-  transform: translateY(-1px);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--text-tertiary);
 }
 
 .auth-toggle {
@@ -184,31 +186,42 @@
 }
 
 /* Interest tags for Signup */
+.interests-section {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
 .interests-grid {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin-top: var(--space-2);
+  margin-top: var(--space-3);
 }
 
 .interest-tag {
-  padding: 4px 12px;
+  padding: 8px 16px;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   border-radius: 100px;
-  font-size: var(--fs-micro);
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
   color: var(--text-secondary);
+  user-select: none;
 }
 
 .interest-tag:hover {
   border-color: var(--accent-primary);
-  color: var(--text-primary);
+  color: var(--accent-primary);
+  background-color: rgba(16, 185, 129, 0.05);
+  transform: translateY(-1px);
 }
 
 .interest-tag.selected {
-  background-color: var(--accent-soft);
-  color: var(--accent-primary);
+  background-color: var(--accent-primary);
+  color: white;
   border-color: var(--accent-primary);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
 }

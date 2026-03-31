@@ -63,4 +63,12 @@ export const onboardingService = {
   complete: (data) => api.post('/onboarding/complete', data),
 };
 
+// Workspace Services
+export const workspaceService = {
+  saveWhiteboard: (moduleTitle, elements) => api.post('/workspace/whiteboard/save', { moduleTitle, elements }),
+  getWhiteboard: (moduleTitle) => api.get(`/workspace/whiteboard/${encodeURIComponent(moduleTitle)}`),
+  updateLearning: (data) => api.post('/workspace/learning/update', data),
+  getAllLearning: () => api.get('/workspace/learning/all'),
+};
+
 export default api;

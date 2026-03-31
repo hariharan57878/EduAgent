@@ -1,5 +1,4 @@
-import React from 'react';
-import { LayoutDashboard, Waypoints, BarChart2, Settings, BrainCircuit } from 'lucide-react';
+import { LayoutDashboard, BarChart2, Settings, BrainCircuit } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
@@ -9,7 +8,6 @@ const Sidebar = () => {
 
   const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: Waypoints, label: 'My Roadmaps', path: '/my-paths' },
     { icon: BarChart2, label: 'Analytics', path: '/analytics' },
     { icon: Settings, label: 'Settings', path: '/settings' },
   ];
@@ -40,9 +38,6 @@ const Sidebar = () => {
         })}
       </nav>
 
-      <div className="sidebar-footer">
-        <div className="tagline">"Stop starting. Start finishing."</div>
-      </div>
     </aside>
   );
 };

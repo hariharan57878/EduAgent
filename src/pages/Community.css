@@ -62,7 +62,7 @@
 /* Post Input Form */
 .post-input-container {
   padding: 1.5rem 2.5rem 0;
-  max-width: 900px;
+  max-width: inherit;
   margin: 0 auto;
   width: 100%;
 }
@@ -101,7 +101,7 @@
 
 .feed-content {
   padding: 2rem 2.5rem;
-  max-width: 900px;
+  max-width: inherit;
   margin: 0 auto;
   width: 100%;
   display: flex;
