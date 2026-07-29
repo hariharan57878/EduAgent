@@ -13,14 +13,17 @@ Whether you're looking to bridge a professional skills gap or master a complex c
 - **Execution-Ready Roadmaps**: Generate multi-phase learning paths focused on tactical execution and mastery.
 - **Phase-Based Timeline**: Organize your journey into clear milestones with expandable checklist modules.
 - **Resource Management**: Curate and manage external videos, articles, and documentation directly within your workspace modules.
+- **Immersive Study Workspace**: Dedicated environment with real-time module execution, study timer, and AI assistant integration.
 
-### 🤖 **Proactive AI Steward**
+### 🤖 **Proactive AI Steward & Voice Intelligence**
 - **Learning Operations Manager**: An AI that monitors your pace, detects inactivity, and suggests roadmap optimizations to keep you moving.
+- **Voice-Enabled Assistant**: Interactive voice input for natural, hands-free queries and immediate strategic guidance.
 - **High-Quality Curation**: AI focuses on finding the best external resources rather than teaching concepts through a chat box.
 - **Executive Guidance**: Get strategic advice on your next steps and decision-making helpers to bypass learning blocks.
 
 ### 📊 **Momentum & Progress Tracking**
-- **Completion-Centric Metrics**: Track time spent, milestone completion, and overall roadmap velocity.
+- **Interactive Analytics Dashboard**: Track learning velocity, completion rate trends, weekly study distribution, and skill breakdown.
+- **Completion-Centric Metrics**: Monitor total time spent, milestone completion rates, and overall roadmap momentum.
 - **Granular Module States**: Manage tasks through "Not Started," "In Progress," and "Completed" states.
 - **Consistency Gamification**: Maintain learning streaks and earn badges that celebrate your finishing power, not just your starting intent.
 
@@ -50,7 +53,7 @@ Whether you're looking to bridge a professional skills gap or master a complex c
 - **Authentication**: BCrypt for hashing and JWT for session management.
 
 ### **AI & APIs**
-- **Google Generative AI (Gemini)**: Core engine for generating content and roadmaps.
+- **Google Generative AI (Gemini)**: Core engine for generating content, roadmaps, and steward recommendations.
 - **Groq SDK**: Integrated for high-speed inference tasks.
 
 ---
@@ -104,9 +107,17 @@ GROQ_API_KEY=your_groq_api_key  # Optional if using Groq
 
 ## 🏃‍♂️ Running the Application
 
-To run the full application, you need to start both the **Backend Server** and the **Frontend Client**.
+### **Option 1: Quick Launch (Windows)**
+Run the included batch script to launch both backend and frontend servers automatically in separate windows:
+```cmd
+.\run_project.bat
+```
 
-### **Step 1: Start the Backend**
+### **Option 2: Manual Launch**
+
+To run the full application manually, start both the **Backend Server** and the **Frontend Client**:
+
+#### **Step 1: Start the Backend**
 Open a terminal, navigate to the `server` folder, and run:
 ```bash
 cd server
@@ -114,17 +125,15 @@ npm run dev
 ```
 *Output: `Server running on port 5000` & `MongoDB Connected`*
 
-### **Step 2: Start the Frontend**
+#### **Step 2: Start the Frontend**
 Open a **new** terminal window in the root `EduAgent` directory and run:
 ```bash
 npm run dev
 ```
 *Output: `Local: http://localhost:5173/`*
 
-### **Step 3: Access the App**
+#### **Step 3: Access the App**
 Open your browser and navigate to **[http://localhost:5173](http://localhost:5173)**.
-
----
 
 ---
 
@@ -159,11 +168,12 @@ EduAgent/
 │   └── index.js            # Server entry point
 ├── src/                    # Frontend (React 19)
 │   ├── services/           # Centralized API service layer
-│   ├── components/         # Reusable UI components
-│   ├── pages/              # Main view screens
+│   ├── components/         # Reusable UI components (TopBar, Sidebar, StewardPanel)
+│   ├── pages/              # Main view screens (Dashboard, Analytics, VoiceInput, StudyWorkspace, etc.)
 │   ├── context/            # Global state (AuthContext)
 │   ├── assets/             # Media and styling
 │   └── App.jsx             # Root layout & Routing
+├── run_project.bat         # One-click startup script (Windows)
 └── README.md
 ```
 
@@ -172,7 +182,7 @@ EduAgent/
 ## 🔮 Future Enhancements
 
 - [ ] **Mobile App**: Developing a React Native version for on-the-go learning.
-- [ ] **Advanced Analytics**: Deeper insights into learning patterns and optimization suggestions.
+- [x] **Advanced Analytics**: Deeper insights into learning patterns and optimization suggestions.
 - [ ] **Social Features**: Real-time chat and study groups.
 - [ ] **More AI Integrations**: Support for OpenAI and Claude models.
 
@@ -192,3 +202,4 @@ Contributions are always welcome!
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
