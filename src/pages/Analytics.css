@@ -1,0 +1,210 @@
+.analytics-page {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.analytics-header h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.analytics-header p {
+  color: var(--text-secondary);
+  font-size: var(--fs-body);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-primary);
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-label {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 2px;
+  display: block;
+}
+
+.card-value {
+  font-size: var(--fs-h3);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.analytics-main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .analytics-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.section-header h3 {
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.badge-ai {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Visualization Content */
+.visual-chart {
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  min-height: 200px;
+}
+
+.trajectory-viz {
+  margin-bottom: var(--space-4);
+}
+
+.path-animate {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: draw 2s forwards ease-in-out;
+}
+
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+.chart-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.legend-item { display: flex; align-items: center; gap: 4px; color: var(--text-secondary); }
+.dot { width: 8px; height: 8px; border-radius: 2px; }
+.dot.active { background: var(--accent-primary); }
+.dot.todo { background: var(--bg-secondary); }
+
+/* Bar Viz */
+.bar-viz {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 200px;
+  padding: 0 16px;
+}
+
+.bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+}
+
+.bar-fill {
+  width: 12px;
+  background: var(--accent-gradient);
+  border-radius: 6px 6px 2px 2px;
+  box-shadow: 0 4px 10px rgba(var(--accent-rgb), 0.2);
+}
+
+.bar-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-tertiary);
+}
+
+/* Table Area */
+.roadmap-performance { padding: var(--space-5); }
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analytics-table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border-light);
+  text-transform: uppercase;
+}
+
+.analytics-table td {
+  padding: 16px 12px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 14px;
+}
+
+.item-title { font-weight: 700; color: var(--text-primary); }
+
+.status-pill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.status-pill.active { background: #dcfce7; color: #10b981; }
+.status-pill.todo { background: var(--bg-secondary); color: var(--text-secondary); }
+
+.mini-progress-bg { width: 100px; height: 6px; background: var(--bg-secondary); border-radius: 3px; overflow: hidden; }
+.mini-fill { height: 100%; background: var(--accent-primary); border-radius: 3px; }
+.score-text { font-weight: 700; color: #10b981; }

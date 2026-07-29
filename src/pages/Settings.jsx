@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { User, Bell, Shield, Smartphone, Globe, Moon, Monitor } from 'lucide-react';
 import './Settings.css';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 
 const Settings = () => {
   const { user, updateUser } = useApp();
+  const { signout } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
 
   // Local state for form handling
@@ -97,7 +99,8 @@ const Settings = () => {
                 ></textarea>
               </div>
 
-              <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
+              <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1.5rem', borderTop: '1px solid var(--border-light)' }}>
+                <button className="btn-secondary" onClick={signout} style={{ color: '#ef4444', borderColor: 'transparent' }}>Sign Out</button>
                 <button className="btn-primary" onClick={handleSave}>Save Changes</button>
               </div>
             </div>

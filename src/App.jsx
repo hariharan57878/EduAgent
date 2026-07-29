@@ -11,6 +11,7 @@ import RoadmapView from './pages/RoadmapView';
 import StudyWorkspace from './pages/StudyWorkspace';
 import Login from './pages/Login';
 import Wizard from './pages/Wizard';
+import Analytics from './pages/Analytics';
 import AboutPage from './pages/AboutPage';
 import { AppProvider, useApp } from './context/AppContext';
 import { useAuth } from './context/AuthContext';
@@ -91,6 +92,7 @@ function AppLayout() {
                     <Route path="/voice-space" element={<VoiceInput />} />
                     <Route path="/community" element={<Community />} />
                     <Route path="/settings" element={<Settings />} />
+                    <Route path="/analytics" element={<Analytics />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/wizard" element={<Navigate to="/" />} />
                     <Route path="*" element={<Navigate to="/" />} />
